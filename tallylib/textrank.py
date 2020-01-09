@@ -6,20 +6,8 @@ import pytextrank
 from datetime import datetime
 from datetime import timedelta
 from django.db import connection
-from yelp.models import YelpReview
-import time
-
-
-def getYelpReviews(business_id, 
-                   starting_date, 
-                   ending_date):
-    sql = f'''
-    SELECT uuid, date, text FROM tallyds.review
-    WHERE business_id = '{business_id}'
-    AND datetime >= '{starting_date}'
-    AND datetime <= '{ending_date}';
-    '''
-    return [[record.date, record.text] for record in YelpReview.objects.raw(sql)]
+# Local 
+from tallylib.sql import getYelpReviews
 
 
 def yelpTrendyPhrases(business_id, 
@@ -28,8 +16,6 @@ def yelpTrendyPhrases(business_id,
                       days_per_period=30,
                       topk=10
                       ):  
-    # business_id = 'Iq7NqQD-sESu3vr9iEGuTA'  
-    starting_time = time.time()
     '''
     1. Get Yelp review texts
     2. Bag review texts within certain period, e.g. 6 peridos (180 days)
@@ -52,7 +38,7 @@ def yelpTrendyPhrases(business_id,
         
     df_reviews = pd.DataFrame(reviews, columns=['date', 'text'])
     df_reviews['date']= pd.to_datetime(df_reviews['date']) 
-    print("Reviews selected from database:", df_reviews.shape)
+
     '''
     spacy.load() or en_core_web_sm.load() might cause the following error:
     'utf-8' codec can't decode byte 0xde in position 0: invalid continuation byte
@@ -87,10 +73,6 @@ def yelpTrendyPhrases(business_id,
                                columns=['date', 'rank', 'count', 'keywords'])
     keywords_topk = df_keywords['keywords'].value_counts().index[:topk].tolist()
     df_keywords = df_keywords[df_keywords['keywords'].isin(keywords_topk)]
-
-    print("Keywords returned:", df_keywords.shape)
-    ending_time = time.time()
-    print("Total yelpTrendyPhrases() execution time:", ending_time-starting_time)
 
     result, row = [], dict()
     date_last = ''
