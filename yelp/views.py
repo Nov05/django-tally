@@ -13,6 +13,10 @@ import requests
 import json
 
 
+def hello(request):
+    result = "Hello, you are at the Tally Yelp Analytics home page."
+    return HttpResponse(result)
+
 def home(request, business_id):
     result = "This is Yelp Analytics home page."
     viztype = request.GET.get('viztype')

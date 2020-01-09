@@ -18,9 +18,9 @@ https://www.yelp.com/biz/aunt-jakes-new-york
 http://127.0.0.1:8000/yelp/index    
 http://127.0.0.1:8000/yelp/aunt-jakes-new-york (by business alias)      
 http://127.0.0.1:8000/yelp/I2lgw_7DUnwD92ND4PN-Ow?viztype=0 (by business ID)   
-http://127.0.0.1:8000/yelp/DR22QPe3A52diajwPuooVA?viztype=0 
-http://127.0.0.1:8000/yelp/Iq7NqQD-sESu3vr9iEGuTA?viztype=1 
-Below links are examples.   
+http://127.0.0.1:8000/yelp/DR22QPe3A52diajwPuooVA?viztype=0    
+http://127.0.0.1:8000/yelp/Iq7NqQD-sESu3vr9iEGuTA?viztype=1    
+Below links are examples.     
 http://127.0.0.1:8000/yelp/review/ (create review)      
 http://127.0.0.1:8000/yelp/review/9759c0c0-b28a-44ff-b770-4cf303367a60 (get, put, delete, by review UUID)           
 http://127.0.0.1:8000/bucketlists (create)    
