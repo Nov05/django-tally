@@ -217,7 +217,7 @@ spaCy models
 https://spacy.io/usage/models    
 Download spaCy model manually   
 https://github.com/explosion/spacy-models/releases    
-**"en_core_web_sm/en_core_web_sm-2.2.5"** with __init__.py   
+**"en_core_web_sm/en_core_web_sm-2.2.5"** with `__init__.py`   
 ```
 import en_core_web_sm
 nlp = en_core_web_sm.load()   
