@@ -25,6 +25,7 @@ SECRET_KEY = '8=(-_-7slnn_ul6v#uokp!qxa%l!=#te!f(3j_5k5(deia*jk1'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*',
+                 'django-tally-ds.cz5ymmder6.us-west-2.elasticbeanstalk.com',
                  '127.0.0.1',
                  'localhost']
 
