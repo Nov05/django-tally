@@ -12,8 +12,8 @@
 
 
 ### Testing URLs 
-http://127.0.0.1:8000/admin 
-Below links are for demonstration.
+http://127.0.0.1:8000/admin   
+Below links are for demonstration.    
 https://www.yelp.com/biz/aunt-jakes-new-york   
 http://127.0.0.1:8000/yelp/index    
 http://127.0.0.1:8000/yelp/aunt-jakes-new-york (by business alias)      
