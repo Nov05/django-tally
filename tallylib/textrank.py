@@ -1,4 +1,3 @@
-# coding: utf-8
 # tallylib/textrank.py
 import pandas as pd
 import spacy
@@ -53,9 +52,15 @@ def yelpTrendyPhrases(business_id,
     df_reviews = pd.DataFrame(reviews, columns=['date', 'text'])
     df_reviews['date']= pd.to_datetime(df_reviews['date']) 
     print("Reviews selected from database:", df_reviews.shape)
-
+    '''
+    spacy.load() might cause the following error:
+    'utf-8' codec can't decode byte 0xde in position 0: invalid continuation byte
+    '''
     # load a spaCy model, depending on language, scale, etc.
-    nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
+    # nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
+    import en_core_web_sm
+    nlp = en_core_web_sm.load()
+
     # cutomize lemmatizer 
     # https://spacy.io/api/lemmatizer
     # ...
