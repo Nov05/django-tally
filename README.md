@@ -1,8 +1,11 @@
 ﻿# django-tally
-2019-01-06 This is a Django app, locally running on Windows 10.  
+2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
+2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/blob/master/aws/2020-01-09%20aws%20eb.md)  
 
 
 ### Testing URLs 
+[Testing data document](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)    
+[Testing script on Colab notebook](https://colab.research.google.com/drive/1Gzo2lFj1cEj72mkVoko5rAo-OXaeLwot)     
 http://127.0.0.1:8000/admin   
 Below links are for demonstration.    
 https://www.yelp.com/biz/aunt-jakes-new-york   
@@ -28,6 +31,7 @@ $ python manage.py inspectdb > models.py
 $ pip freeze | Out-File -Encoding UTF8 requirements.txt
 $ python -m django --version
 ```  
+
 
 ### Activate virtual enviroment  
 (base) PS D:\github\django-tally>     
