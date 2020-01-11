@@ -1,4 +1,3 @@
-# coding: utf-8
 from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
@@ -31,6 +30,7 @@ def home(request, business_id):
     return HttpResponse(result)
 
 
+# example
 class YelpYelpScrapingCreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = YelpYelpScraping.objects.all()
@@ -41,6 +41,7 @@ class YelpYelpScrapingCreateView(generics.ListCreateAPIView):
         serializer.save()
 
 
+# example
 class YelpYelpScrapingDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = YelpYelpScraping.objects.all()

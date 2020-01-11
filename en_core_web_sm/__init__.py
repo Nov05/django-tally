@@ -1,4 +1,4 @@
-# coding: utf8
+﻿# coding: utf8
 from __future__ import unicode_literals
 
 from pathlib import Path
