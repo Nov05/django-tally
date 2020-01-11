@@ -15,7 +15,7 @@ def yelpScraper(bid):
     containing term, highratingscore, poorratingscore.'''
 
     base_url = "https://www.yelp.com/biz/" # add business id
-    api_url = "/review_feed?sort_by=date_desc&start="
+    api_url = "/review_feed?sort_by=date_desc&start=" # add number
 
     class Scraper():
         def __init__(self):
@@ -24,7 +24,6 @@ def yelpScraper(bid):
         def get_data(self, n, bid=bid):
             with Session() as s:
                 url = base_url + bid + api_url + str(n*20)
-                print(url)
                 with s.get(url, timeout=5) as r: 
                     if r.status_code==200:
                         response = dict(r.json()) 

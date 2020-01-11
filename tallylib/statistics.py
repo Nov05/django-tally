@@ -4,11 +4,11 @@ from calendar import monthrange
 from tallylib.sql import getReviewCountMonthly
 
 
+# viztype2
 def yelpReviewCountMonthly(business_id):
     data = getReviewCountMonthly(business_id)
     result = []
     for d in data:
-        print(d)
         row = dict()
         # YYYY-MM-DD, d[0] is year, d[1] is month
         row['date'] = f'{d[0]}-{d[1]}-{monthrange(d[0], d[1])[1]}'

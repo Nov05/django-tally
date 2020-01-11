@@ -15,6 +15,9 @@ nlp = en_core_web_sm.load()
 
 # viztype0 (Top 10 Positive/Negative Phrases)
 def getReviewPosNegPhrases(yelpScraperResult):
+    if yelpScraperResult.empty:
+        return pd.DataFrame()
+
     df = yelpScraperResult.copy()
 
     nlp.Defaults.stop_words |= {'will','because','not','friends',
@@ -44,9 +47,11 @@ def getReviewPosNegPhrases(yelpScraperResult):
     # positive dataframe, negative dataframe 
     return dh.head(10), dh.tail(10)
 
-
+# viztype3
 def getYelpWordsReviewFreq(yelpScraperResult):
-  
+    if yelpScraperResult.empty:
+        return pd.DataFrame()
+
     df = yelpScraperResult.copy()
 
     df = df.rename(columns = {0:'date', 2:'stars',1:'text'})
@@ -67,9 +72,9 @@ def getYelpWordsReviewFreq(yelpScraperResult):
 
     # get the date of last day of the week
     list = []
-    for idx, row in df.iterrows():
+    for _, row in df.iterrows():
         text = str(row['year'].astype(int)) + '-W' + str(row['week_number_of_year'].astype(int)) + '-6'
-        date_of_week = datetime.strptime(text, "%Y-W%W-%w").strftime('%Y-%d-%d')
+        date_of_week = datetime.strptime(text, "%Y-W%W-%w").strftime('%Y-%m-%d')
         list.append(date_of_week)
     df['date_of_week'] = list
 
@@ -79,6 +84,9 @@ def getYelpWordsReviewFreq(yelpScraperResult):
 def getDataViztype0(business_id):
     # do web scraping
     yelpScraperResult = yelpScraper(business_id)
+    if yelpScraperResult.empty:
+        return {}
+
     # viztype0
     df_positive, df_negative = getReviewPosNegPhrases(yelpScraperResult)
     # viztype3
@@ -96,5 +104,5 @@ def getDataViztype0(business_id):
                     }
               }
     del [df_positive, df_negative, df_bydate]
-    print(results)
+
     return results

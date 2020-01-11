@@ -10,6 +10,7 @@ from django.db import connection
 from tallylib.sql import getReviews
 
 
+# viztype1
 def yelpTrendyPhrases(business_id, 
                       periods=12,
                       bagging_periods=3, 
@@ -29,7 +30,7 @@ def yelpTrendyPhrases(business_id,
                          starting_date=past_date,
                          ending_date=current_date)
     if reviews == []:
-        return
+        return {}
         
     df_reviews = pd.DataFrame(reviews, columns=['date', 'text'])
     df_reviews['date']= pd.to_datetime(df_reviews['date']) 
@@ -66,7 +67,8 @@ def yelpTrendyPhrases(business_id,
         doc = nlp(text)
         for i,p in enumerate(doc._.phrases):
             keywords.append([ending_date, p.rank, p.count, p.text])
-            if i >= topk-1: break  
+            if i >= topk-1: 
+                break  
     del [df_reviews]
     df_keywords = pd.DataFrame(keywords,
                                columns=['date', 'rank', 'count', 'keywords'])
