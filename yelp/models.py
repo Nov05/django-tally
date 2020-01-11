@@ -78,17 +78,3 @@ class YelpYelpScraping(models.Model):
     class Meta:
         managed = False
         db_table = 'yelp_scraping'
-
-class YelpDsTrendyPhrase(models.Model):
-    business_id = models.CharField(primary_key=True, max_length=100)
-    datetime = models.DateTimeField(blank=True, null=True)
-    rank = models.FloatField(blank=True, null=True)
-    keywords = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        """Return a human readable representation of the model instance."""
-        return "{}".format(self.keywords)
-
-    class Meta:
-        managed = False
-        db_table = 'ds_trendyphrase'

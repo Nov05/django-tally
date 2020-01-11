@@ -4,26 +4,31 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from rest_framework import generics
-from .models import YelpYelpScraping
-from .serializers import YelpYelpScrapingSerializer
-from tallylib.scraper import yelpScraper
-from tallylib.textrank import yelpTrendyPhrases
-
 import requests
 import json
+# Local
+from .models import YelpYelpScraping
+from .serializers import YelpYelpScrapingSerializer
+from tallylib.textrank import yelpTrendyPhrases
+from tallylib.scattertxt import getDataViztype0
+from tallylib.statistics import yelpReviewCountMonthly
+ 
 
-
+# Nothing here
 def hello(request):
     result = "Hello, you are at the Tally Yelp Analytics home page."
     return HttpResponse(result)
 
+
+# Query strings -> Main analytics
 def home(request, business_id):
-    result = "This is Yelp Analytics home page."
     viztype = request.GET.get('viztype')
     if viztype == '1':
         result = json.dumps(yelpTrendyPhrases(business_id))
+    elif viztype == '2':
+        result = json.dumps(yelpReviewCountMonthly(business_id))
     else:
-        result = json.dumps(yelpScraper(business_id))
+        result = json.dumps(getDataViztype0(business_id))
     return HttpResponse(result)
 
 

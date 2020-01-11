@@ -7,7 +7,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.db import connection
 # Local 
-from tallylib.sql import getYelpReviews
+from tallylib.sql import getReviews
 
 
 def yelpTrendyPhrases(business_id, 
@@ -25,9 +25,9 @@ def yelpTrendyPhrases(business_id,
     ## Get reivews from database
     current_date = datetime.strptime('2018-11-30', '%Y-%m-%d')
     past_date = current_date - timedelta(days=days_per_period * periods -1)
-    reviews = getYelpReviews(business_id, 
-                             starting_date=past_date,
-                             ending_date=current_date)
+    reviews = getReviews(business_id, 
+                         starting_date=past_date,
+                         ending_date=current_date)
     if reviews == []:
         return
         
