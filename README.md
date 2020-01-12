@@ -244,11 +244,11 @@ nlp = en_core_web_sm.load()
 ### Reference  
 [Django Documentation](https://docs.djangoproject.com/en/3.0/)   
 [Django Message Framework](https://docs.djangoproject.com/en/3.0/ref/contrib/messages/)    
-[AWS - Deploying a Django Application to Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html#w510aac13c37c15c13b7b2b3b3)    
-[AWS - Configure the EB CLI]（https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html）     
-[AWS - My security credentials](https://console.aws.amazon.com/iam/home?#/security_credentials)   
+[AWS: Deploying a Django Application to Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html#w510aac13c37c15c13b7b2b3b3)    
+[AWS: Configure the EB CLI](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html)       
+[AWS: My security credentials](https://console.aws.amazon.com/iam/home?#/security_credentials)   
 [Build a REST API with Django – A Test Driven Approach: Part 1](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1)  
 [List of Useful URL Patterns](https://simpleisbetterthancomplex.com/references/2016/10/10/url-patterns.html)   
+[Understanding file encoding in VSCode and PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7) 02/27/2019 
 【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)    
-【Repo】[Lily's Django](https://github.com/Lambda-School-Labs/tally-ai-ds/tree/b95c67d7f0989b49a5ab8b89d9e6884233622da3/ElasticBeanstalkDjango_v.0.2/ebdjango)   
-[Understanding file encoding in VSCode and PowerShell 02/27/2019](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7)    
+【Repo】[Lily's Django](https://github.com/Lambda-School-Labs/tally-ai-ds/tree/b95c67d7f0989b49a5ab8b89d9e6884233622da3/ElasticBeanstalkDjango_v.0.2/ebdjango)         
