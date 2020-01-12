@@ -33,6 +33,19 @@ $ python -m django --version
 ```  
 
 
+### Deploy to AWS Elastic Beanstalk   
+During the deployment, you may need to use the following AWS CLI commands.
+```  
+eb init -p python-3.6 django-tally
+eb create django-tally
+eb status
+eb deploy
+eb open
+eb logs
+eb config
+eb terminate django-tally
+```
+
 ### Activate virtual enviroment  
 (base) PS D:\github\django-tally>     
 ```
@@ -236,7 +249,7 @@ https://pypi.org/project/spacy/
 Download spaCy model manually (Not in use)       
 https://github.com/explosion/spacy-models/releases  
 You can install spaCy models just like installing a Python package.   
-`pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`
+`pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`       
 Then import the models in your code.    
 ```
 import en_core_web_sm
