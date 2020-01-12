@@ -1,6 +1,6 @@
 ﻿# django-tally
 2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
-2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/blob/master/aws/2020-01-09%20aws%20eb.md)  
+2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)  
 
 
 ### Deploy to AWS Elastic Beanstalk   
