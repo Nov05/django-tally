@@ -40,7 +40,7 @@ def getReviewCountMonthly(business_id,
         return cursor.fetchall()
 
     
-def getLastedReviewDate(business_id):
+def getLatestReviewDate(business_id):
     sql = f'''
     SELECT datetime
     FROM tallyds.review

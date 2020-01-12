@@ -8,7 +8,7 @@ from datetime import timedelta
 from django.db import connection
 # Local 
 from tallylib.sql import getReviews
-from tallylib.sql import getLastedReviewDate
+from tallylib.sql import getLatestReviewDate
 
 
 # viztype1
@@ -27,7 +27,7 @@ def yelpTrendyPhrases(business_id,
     ##################################
     # Get reivews from database
     ##################################
-    current_date = getLastedReviewDate(business_id)
+    current_date = getLatestReviewDate(business_id)
     past_date = current_date - timedelta(days=days_per_period * periods -1)
     reviews = getReviews(business_id, 
                          starting_date=past_date,
