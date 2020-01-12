@@ -3,6 +3,20 @@
 2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/blob/master/aws/2020-01-09%20aws%20eb.md)  
 
 
+### Deploy to AWS Elastic Beanstalk   
+During the deployment, you may need to use the following AWS CLI commands.
+```  
+$ eb init -p python-3.6 django-tally
+$ eb create django-tally
+$ eb status
+$ eb deploy
+$ eb open
+$ eb logs
+$ eb config
+$ eb terminate django-tally
+```
+
+
 ### Testing URLs 
 [Testing data document](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)    
 [Testing script on Colab notebook](https://colab.research.google.com/drive/1Gzo2lFj1cEj72mkVoko5rAo-OXaeLwot)     
@@ -32,19 +46,6 @@ $ pip freeze | Out-File -Encoding UTF8 requirements.txt
 $ python -m django --version
 ```  
 
-
-### Deploy to AWS Elastic Beanstalk   
-During the deployment, you may need to use the following AWS CLI commands.
-```  
-eb init -p python-3.6 django-tally
-eb create django-tally
-eb status
-eb deploy
-eb open
-eb logs
-eb config
-eb terminate django-tally
-```
 
 ### Activate virtual enviroment  
 (base) PS D:\github\django-tally>     
