@@ -18,8 +18,10 @@ $ eb terminate django-tally
 
 
 ### Testing URLs 
-[Testing data document](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)    
-[Testing script on Colab notebook](https://colab.research.google.com/drive/1Gzo2lFj1cEj72mkVoko5rAo-OXaeLwot)     
+[【Testing URLs】](https://drive.google.com/file/d/1ziicAiUIfa8dI-qtMs8WJQN_5zbr2l0o/)    
+[【Testing data documents】](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)  
+https://drive.google.com/file/d/1ziicAiUIfa8dI-qtMs8WJQN_5zbr2l0o/  
+[【Testing script Colab】](https://colab.research.google.com/drive/1Gzo2lFj1cEj72mkVoko5rAo-OXaeLwot)     
 http://127.0.0.1:8000/admin   
 Below links are for demonstration.    
 https://www.yelp.com/biz/aunt-jakes-new-york   
