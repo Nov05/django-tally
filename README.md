@@ -348,6 +348,15 @@ For MacOS/Linux use `export VARNAME=value`.
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_HOSTNAME=*.*.us-east-2.rds.amazonaws.com
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_PORT=*
 ``` 
+Or add `.env` in the django-tally folder, and the following lines to the file.   
+(In `.gitignore` file, `.env` has been added.)    
+```
+RDS_DB_NAME=*
+RDS_USERNAME=*
+RDS_PASSWORD=*
+RDS_HOSTNAME=*
+RDS_PORT=*
+```
 To make sure the variables are properly created, type `python` then print out `os.environ[<varname>]`.  
 ```
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>python
