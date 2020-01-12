@@ -10,23 +10,26 @@ from .serializers import YelpYelpScrapingSerializer
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
- 
-
-# Nothing here
-def hello(request):
-    result = "Hello, you are at the Tally Yelp Analytics home page."
-    return HttpResponse(result)
 
 
 # Query strings -> Main analytics
 def home(request, business_id):
     viztype = request.GET.get('viztype')
     if viztype == '1':
-        result = json.dumps(yelpTrendyPhrases(business_id))
+        result = json.dumps(yelpTrendyPhrases(business_id), 
+                            sort_keys=False)
     elif viztype == '2':
-        result = json.dumps(yelpReviewCountMonthly(business_id))
-    else:
-        result = json.dumps(getDataViztype0(business_id))
+        result = json.dumps(yelpReviewCountMonthly(business_id), 
+                            sort_keys=False)
+    else: # viztype0 and viztype3
+        result = json.dumps(getDataViztype0(business_id),
+                            sort_keys=False)
+    return HttpResponse(result)
+
+
+# Nothing here
+def hello(request):
+    result = "Hello, you are at the Tally Yelp Analytics home page."
     return HttpResponse(result)
 
 

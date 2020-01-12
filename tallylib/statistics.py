@@ -7,6 +7,7 @@ from tallylib.sql import getReviewCountMonthly
 # viztype2
 def yelpReviewCountMonthly(business_id):
     data = getReviewCountMonthly(business_id)
+    print(data)
     result = []
     for d in data:
         row = dict()

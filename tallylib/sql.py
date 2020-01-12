@@ -31,10 +31,24 @@ def getReviewCountMonthly(business_id,
     FROM tallyds.review AS r
     WHERE business_id = '{business_id}'
     GROUP BY 1, 2
-    ORDER BY 1 desc, 2 desc
+    ORDER BY 1 DESC, 2 DESC
     LIMIT {number_of_months};
     '''
     with connection.cursor() as cursor:
         cursor.execute(sql)
         # return a tuple
         return cursor.fetchall()
+
+    
+def getLastedReviewDate(business_id):
+    sql = f'''
+    SELECT datetime
+    FROM tallyds.review
+    WHERE business_id = '{business_id}'
+    ORDER BY datetime DESC
+    LIMIT 1;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        # return a datetime.datatime object
+        return cursor.fetchone()[0]
