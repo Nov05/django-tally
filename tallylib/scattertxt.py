@@ -1,16 +1,11 @@
-import pandas as pd
-import spacy
-import scattertext as st
 import re
 import sys
 from datetime import datetime
+import pandas as pd
+import spacy
+import scattertext as st
 # Local imports
 from tallylib.scraper import yelpScraper
-# spaCy imports
-import en_core_web_sm
-nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
-# nlp = en_core_web_sm.load()
-
 
 # viztype0 (Top 10 Positive/Negative Phrases)
 def getReviewPosNegPhrases(yelpScraperResult):
@@ -19,6 +14,7 @@ def getReviewPosNegPhrases(yelpScraperResult):
 
     df = yelpScraperResult.copy()
 
+    nlp = spacy.load("en_core_web_sm")
     nlp.Defaults.stop_words |= {'will','because','not','friends',
     'amazing','awesome','first','he','check-in',
     '=','= =','male','u','want', 'u want', 'cuz',

@@ -1,7 +1,6 @@
 # tallylib/textrank.py
 import pandas as pd
 import spacy
-import en_core_web_sm
 import pytextrank
 from datetime import datetime
 from datetime import timedelta
@@ -53,9 +52,7 @@ def yelpTrendyPhrases(business_id,
     'utf-8' codec can't decode byte 0xde in position 0: invalid continuation byte
     '''
     # load a spaCy model, depending on language, scale, etc.
-    nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
-    # nlp = en_core_web_sm.load()
-
+    nlp = spacy.load("en_core_web_sm")
     # cutomize lemmatizer 
     # https://spacy.io/api/lemmatizer
     # ...

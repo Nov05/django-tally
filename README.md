@@ -40,7 +40,7 @@ $ pipenv shell
 ```
 Install dependencies: 
 ```
-$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml
+$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz
 ```
 
 ### Create project 
@@ -230,15 +230,26 @@ Solution: You can simply create a new .py file, copy and paste the `models.py` c
 
 ### spaCy
 spaCy models   
-https://spacy.io/usage/models    
-Download spaCy model manually   
+https://spacy.io/usage/models  
+How to install models     
+https://pypi.org/project/spacy/  
+Download spaCy model manually (Not in use)       
 https://github.com/explosion/spacy-models/releases  
-Put the following folder in the repo (same level with `manage.py`).      
-**"en_core_web_sm/en_core_web_sm-2.2.5"** with `__init__.py`   
+You can install spaCy models just like installing a Python package.   
+`pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`
+Then import the models in your code.    
 ```
 import en_core_web_sm
 nlp = en_core_web_sm.load()   
 ```
+or
+```
+import spacy
+nlp = spacy.load("en_core_web_sm") 
+```
+【Wrong Way】
+Put the following folder in the repo (same level with `manage.py`).       
+**spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")** with `__init__.py`  
 
 
 ### Reference  
