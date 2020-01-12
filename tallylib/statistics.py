@@ -14,4 +14,5 @@ def yelpReviewCountMonthly(business_id):
         row['date'] = f'{d[0]}-{d[1]}-{monthrange(d[0], d[1])[1]}'
         row['reviews'] = d[2]
         result.append(row)
+        result = result[::-1]
     return result

@@ -1,4 +1,4 @@
-﻿# yelp/urls.py
+# yelp/urls.py
 
 from django.urls import path
 from django.conf.urls import url

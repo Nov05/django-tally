@@ -6,7 +6,6 @@ import sys
 from datetime import datetime
 # Local imports
 from tallylib.scraper import yelpScraper
-
 # spaCy imports
 import en_core_web_sm
 # nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
@@ -73,7 +72,8 @@ def getYelpWordsReviewFreq(yelpScraperResult):
     # get the date of last day of the week
     list = []
     for _, row in df.iterrows():
-        text = str(row['year'].astype(int)) + '-W' + str(row['week_number_of_year'].astype(int)) + '-6'
+        text = str(row['year'].astype(int)) + '-W' + \
+               str(row['week_number_of_year'].astype(int)) + '-6'
         date_of_week = datetime.strptime(text, "%Y-W%W-%w").strftime('%Y-%m-%d')
         list.append(date_of_week)
     df['date_of_week'] = list
@@ -93,16 +93,18 @@ def getDataViztype0(business_id):
     df_bydate = getYelpWordsReviewFreq(yelpScraperResult)
  
     # API data formatting
-    results = {'viztype0':
-                    {'positive': [{'term': pos_term, 'score': pos_score} 
-                                  for pos_term, pos_score in zip(df_positive['term'], df_positive['score'])], 
-                     'negative': [{'term': neg_term, 'score': neg_score} 
-                                  for neg_term, neg_score in zip(df_negative['term'], df_negative['score'])]},
-               'viztype3':
-                    {'star_data': [{'date': row[0], 'cumulative_avg_rating': row[1], 'weekly_avg_rating': row[2]}
-                                   for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'stars']].values]
-                    }
-              }
+    results = {
+    'viztype0':
+        {'positive': [{'term': row[0], 'score': row[1]} 
+                        for row in df_positive[['term', 'score']].values], 
+            'negative': [{'term': row[0], 'score': row[1]} 
+                        for row in df_negative[['term', 'score']].values]
+        },
+    'viztype3':
+        {'star_data': [{'date': row[0], 'cumulative_avg_rating': row[1], 'weekly_avg_rating': row[2]}
+                        for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'stars']].values]
+        }
+    }
     del [df_positive, df_negative, df_bydate]
 
     return results

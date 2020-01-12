@@ -1,4 +1,4 @@
-﻿from concurrent.futures import ThreadPoolExecutor as Executor
+from concurrent.futures import ThreadPoolExecutor as Executor
 from requests import Session
 from lxml import html
 import pandas as pd

@@ -37,15 +37,14 @@ $ python -m django --version
 (base) PS D:\github\django-tally>     
 ```
 $ pipenv shell
-$ pipenv install django
-$ pipenv install djangorestframework
 ```
-Other dependencies: 
+Install dependencies: 
 ```
-$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint
+$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml
 ```
 
-### Create project  
+### Create project 
+If you have downloaded this repo, skip this step.      
 PS D:\github\django-tally>     
 ```
 $ cd C:\Users\guido\.virtualenvs\django-tally-QTYVOJb0\Scripts\
@@ -97,9 +96,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
-        'USER': 'tally_ds',
-        'PASSWORD': 'P@ssw0rd',
-        'HOST': 'database-spotifier.c5eevkz7wazj.us-east-2.rds.amazonaws.com',
+        'USER': '*',
+        'PASSWORD': '*',
+        'HOST': '*.*.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
         'OPTIONS': {
                         'options': '-c search_path=django'
@@ -195,6 +194,19 @@ urlpatterns = {
         YelpYelpScrapingDetailsView.as_view(), name="details"),
 }
 ```
+E.g. query strings
+```
+urlpatterns = {path('<slug:business_id>', home, name='home')}
+def home(request, business_id):
+    viztype = request.GET.get('viztype')
+    if viztype == '1':
+        result = json.dumps(yelpTrendyPhrases(business_id))
+    elif viztype == '2':
+        result = json.dumps(yelpReviewCountMonthly(business_id))
+    else:
+        result = json.dumps(getDataViztype0(business_id))
+    return HttpResponse(result)
+```
 Follow this [tutorial](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1).    
 
 
@@ -220,7 +232,8 @@ Solution: you can simply create a new .py file, copy and paste the `models.py` c
 spaCy models   
 https://spacy.io/usage/models    
 Download spaCy model manually   
-https://github.com/explosion/spacy-models/releases    
+https://github.com/explosion/spacy-models/releases 
+Put the following folder in the repo (same level with `manage.py`).      
 **"en_core_web_sm/en_core_web_sm-2.2.5"** with `__init__.py`   
 ```
 import en_core_web_sm
@@ -238,3 +251,4 @@ nlp = en_core_web_sm.load()
 [List of Useful URL Patterns](https://simpleisbetterthancomplex.com/references/2016/10/10/url-patterns.html)   
 【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)    
 【Repo】[Lily's Django](https://github.com/Lambda-School-Labs/tally-ai-ds/tree/b95c67d7f0989b49a5ab8b89d9e6884233622da3/ElasticBeanstalkDjango_v.0.2/ebdjango)   
+[Understanding file encoding in VSCode and PowerShell 02/27/2019](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7)    

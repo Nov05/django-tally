@@ -1,4 +1,4 @@
-﻿[[source]]
+[[source]]
 name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -15,7 +15,7 @@ scattertext = "*"
 pytextrank = "*"
 awscli = "*"
 pylint = "*"
-pyyaml = "==5.3"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"

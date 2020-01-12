@@ -1,4 +1,4 @@
-﻿# tallylib/textrank.py
+# tallylib/textrank.py
 import pandas as pd
 import spacy
 import en_core_web_sm

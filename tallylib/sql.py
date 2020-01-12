@@ -25,14 +25,14 @@ def getReviews(business_id,
 def getReviewCountMonthly(business_id,
                           number_of_months=12):
     sql = f'''
-    select extract(year from date)::INTEGER AS year,
+    SELECT extract(year from date)::INTEGER AS year,
            extract(month from date)::INTEGER AS month,
            count(*) AS count
-    from tallyds.review AS r
-    where business_id = '{business_id}'
-    group by 1, 2
-    order by 1 desc, 2 desc
-    limit {number_of_months};
+    FROM tallyds.review AS r
+    WHERE business_id = '{business_id}'
+    GROUP BY 1, 2
+    ORDER BY 1 desc, 2 desc
+    LIMIT {number_of_months};
     '''
     with connection.cursor() as cursor:
         cursor.execute(sql)
