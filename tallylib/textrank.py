@@ -26,6 +26,7 @@ def yelpTrendyPhrases(business_id,
     ##################################
     # Get reivews from database
     ##################################
+    # review data from database is already in datetime descending order.
     current_date = getLatestReviewDate(business_id)
     past_date = current_date - timedelta(days=days_per_period * periods -1)
     reviews = getReviews(business_id, 
@@ -34,7 +35,7 @@ def yelpTrendyPhrases(business_id,
     if reviews == []:
         return {}
     # Here using pandas dataframe is not a good practice.
-    # However there is not enough time to change for now.
+    # However there is not enough time to change right now.
     df_reviews = pd.DataFrame(reviews, columns=['date', 'text'])
     reviews.clear(); del reviews
     df_reviews['date']= pd.to_datetime(df_reviews['date']) 
@@ -78,7 +79,8 @@ def yelpTrendyPhrases(business_id,
     del [df_reviews]
     df_keywords = pd.DataFrame(keywords, columns=['date', 'rank', 'keywords'])
     keywords_topk = df_keywords['keywords'].value_counts().index[:topk].tolist()
-    df_keywords = df_keywords[df_keywords['keywords'].isin(keywords_topk)]
+    df_keywords = (df_keywords[df_keywords['keywords']
+                    .isin(keywords_topk)])
 
     ##################################
     # Formatting for JSON output

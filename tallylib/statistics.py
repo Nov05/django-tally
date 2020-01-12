@@ -6,8 +6,8 @@ from tallylib.sql import getReviewCountMonthly
 
 # viztype2
 def yelpReviewCountMonthly(business_id):
+    # data are already in datetime descending order.
     data = getReviewCountMonthly(business_id)
-    print(data)
     result = []
     for d in data:
         row = dict()
@@ -15,5 +15,5 @@ def yelpReviewCountMonthly(business_id):
         row['date'] = f'{d[0]}-{d[1]}-{monthrange(d[0], d[1])[1]}'
         row['reviews'] = d[2]
         result.append(row)
-        result = result[::-1]
+    result = result[::-1]
     return result

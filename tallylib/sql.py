@@ -16,7 +16,8 @@ def getReviews(business_id,
     SELECT uuid, date, text FROM tallyds.review
     WHERE business_id = '{business_id}'
     AND datetime >= '{starting_date}'
-    AND datetime <= '{ending_date}';
+    AND datetime <= '{ending_date}'
+    ORDER BY datetime DESC;
     '''
     return [[record.date, record.text] for record in YelpReview.objects.raw(sql)]
 
