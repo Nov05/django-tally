@@ -2,7 +2,7 @@
 import warnings
 
 def checkEnviromentVariables():
-    if 'RDS_DB_NAME' in os.environ: 
+    if 'RDS_DB_NAME' not in os.environ: 
         message = '''
 You haven't set up environment variables for database.
 Please Quit the server with CTRL-BREAK.
