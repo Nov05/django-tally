@@ -263,7 +263,7 @@ nlp = spacy.load("en_core_web_sm")
 【Manually】
 Put the following folder in the repo (same level with `manage.py`).       
 **spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")** with `__init__.py`  
-CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodingError when loading a model, while Windows 10 locally or deployment from MacOS seem fine.  
+CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodeError when loading a model, while Windows 10 locally or deployment from MacOS seem fine.   
 
 
 ### Reference  
