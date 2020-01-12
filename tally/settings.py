@@ -82,23 +82,25 @@ WSGI_APPLICATION = 'tally.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'tally_ds',
-        'PASSWORD': 'P@ssw0rd',
-        'HOST': 'database-spotifier.c5eevkz7wazj.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
-        'OPTIONS': {
-                        'options': '-c search_path=django,tallyds'
-                    },        
-        'TEST': {
-            # 'NAME': 'test', # test database name
-            'ENGINE': 'django.db.backends.sqlite3',
+import os
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+            'OPTIONS': {
+                            'options': '-c search_path=django,tallyds'
+                        },        
+            'TEST': {
+                # 'NAME': 'test', # test database name
+                'ENGINE': 'django.db.backends.sqlite3',
+            },
         },
-    },
-}
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

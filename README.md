@@ -274,6 +274,48 @@ Put the following folder in the repo (same level with `manage.py`).
 CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodeError when loading a model, while Windows 10 locally or deployment from MacOS seem fine.   
 
 
+### Database configuration   
+[AWS: Adding a Database to Your Elastic Beanstalk Environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.managing.db.html)   
+[AWS: Python RDS Connect: Connecting to a Database](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rds.html#python-rds-connect)    
+```
+import os
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
+    }
+```
+Locally add system environment varibles in the Python virtual environment (No quotation marks).    
+For Windows Powershell, use `set VARNAME=value`.   
+For MacOS/Linux use `export VARNAME=value`.   
+```
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_DB_NAME=*
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_USERNAME=*
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_PASSWORD=*
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_HOSTNAME=*.*.us-east-2.rds.amazonaws.com
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_PORT=*
+``` 
+To make sure the variables are properly created, type `python` then print out `os.environ[<varname>]`.  
+```
+(django-tally-QTYVOJb0) (base) D:\github\django-tally>python
+Python 3.7.4 (default, Aug  9 2019, 18:34:13) [MSC v.1915 64 bit (AMD64)] :: Anaconda, Inc. on win32
+Warning:
+This Python interpreter is in a conda environment, but the environment has
+not been activated.  Libraries may fail to load.  To activate this environment
+please see https://conda.io/activation
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> os.environ['RDS_DB_NAME']
+```
+
+
+
 ### Reference  
 [Django Documentation](https://docs.djangoproject.com/en/3.0/)   
 [Django Message Framework](https://docs.djangoproject.com/en/3.0/ref/contrib/messages/)    
