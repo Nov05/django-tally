@@ -249,7 +249,7 @@ https://pypi.org/project/spacy/
 Download spaCy model manually (Not in use)       
 https://github.com/explosion/spacy-models/releases  
 You can install spaCy models just like installing a Python package.   
-`pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`       
+`pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`    
 Then import the models in your code.    
 ```
 import en_core_web_sm
@@ -260,6 +260,12 @@ or
 import spacy
 nlp = spacy.load("en_core_web_sm") 
 ```
+【Deployment】
+Add the following lines into the `requirements.txt`.   
+```
+spacy>=2.0.0,<3.0.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz
+```   
 【Manually】
 Put the following folder in the repo (same level with `manage.py`).       
 **spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")** with `__init__.py`  
