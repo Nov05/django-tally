@@ -225,14 +225,14 @@ So every app would have their own models without conflicting with other apps.
 
 ### Debug
 Issue: [Django “ValueError: source code string cannot contain null bytes”](https://stackoverflow.com/questions/52273840/django-valueerror-source-code-string-cannot-contain-null-bytes)  
-Solution: you can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.    
+Solution: You can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.         
 
 
 ### spaCy
 spaCy models   
 https://spacy.io/usage/models    
 Download spaCy model manually   
-https://github.com/explosion/spacy-models/releases 
+https://github.com/explosion/spacy-models/releases  
 Put the following folder in the repo (same level with `manage.py`).      
 **"en_core_web_sm/en_core_web_sm-2.2.5"** with `__init__.py`   
 ```
