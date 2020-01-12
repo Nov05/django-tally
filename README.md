@@ -291,7 +291,7 @@ if 'RDS_HOSTNAME' in os.environ:
         }
     }
 ```
-Locally add system environment varibles in the Python virtual environment (No quotation marks).    
+Locally add system environment variables in the Python virtual environment (No quotation marks).    
 For Windows Powershell, use `set VARNAME=value`.   
 For MacOS/Linux use `export VARNAME=value`.   
 ```
@@ -313,6 +313,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import os
 >>> os.environ['RDS_DB_NAME']
 ```
+To configure the instance deployed on AWS Elastic Beanstalk.   
+Go to the application `Configuration` page, choose `Software`.    
+<img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration.png?raw=true">
+Add system environment variables there.   
+<img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_19_34-django-tally%20-%20Configuration.png?raw=true">   
 
 
 
