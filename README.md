@@ -362,7 +362,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 To configure the instance deployed on AWS Elastic Beanstalk.   
 Go to the application `Configuration` page, choose `Software`.     
-<img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration.png?raw=true">    
+<img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration_.png?raw=true">    
 Add system environment variables there.   
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_19_34-django-tally%20-%20Configuration.png?raw=true">    
 
