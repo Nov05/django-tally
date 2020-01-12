@@ -8,8 +8,8 @@ from datetime import datetime
 from tallylib.scraper import yelpScraper
 # spaCy imports
 import en_core_web_sm
-# nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
-nlp = en_core_web_sm.load()
+nlp = spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")
+# nlp = en_core_web_sm.load()
 
 
 # viztype0 (Top 10 Positive/Negative Phrases)

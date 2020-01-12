@@ -25,7 +25,6 @@ SECRET_KEY = '8=(-_-7slnn_ul6v#uokp!qxa%l!=#te!f(3j_5k5(deia*jk1'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*',
-                 'django-tally-ds.cz5ymmder6.us-west-2.elasticbeanstalk.com',
                  '127.0.0.1',
                  'localhost']
 
@@ -124,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'US/Central' # 'UTC'
+TIME_ZONE = 'US/Central' # default 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
