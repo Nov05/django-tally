@@ -125,9 +125,14 @@ DATABASES = {
 }
 ```
 Migrate Django admin tables to database `django` schema.   
-[Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the user in database accordingly.   
+[Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the database users accordingly.   
+For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql).   
 
-### Migration   
+
+
+
+### Migration 
+If you have downloaded this repo, you can skip this step.      
 ```
 $ cd d:/github/django-tally
 ```
@@ -158,6 +163,8 @@ Running migrations:
   Applying auth.0011_update_proxy_permissions... OK
   Applying sessions.0001_initial... OK
 ```
+Django migration will create tables automatically in the database.    
+
 
 ### Create admin user  
 PS D:\github\django-tally> 
@@ -179,7 +186,8 @@ Superuser created successfully.
 ```
 a**** / T****_******  
 
-### Using Django REST Framework for APIs
+### Use Django REST Framework for APIs  
+If you have downloaded the repo, you can skip this step.    
 PS D:\github\django-tally>    
 ```
 # D:\github\django-tally\tally\settings.py
@@ -193,13 +201,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',             # Add this line; other app names are not allowed
-    'apis',                       # Add this line; you can use app names other than "apis" 
-    'yelp',                       # Add this app as well
+    'example',                   # Add this line; you can use app names other than "example" 
+    'yelp',                       # Add this app as well for this project
 ]
 ```
+Create an app called "example".   
 ```
-$ python manage.py startapp apis
+$ python manage.py startapp example
 ```  
+
+Setting up URL patterns     
 E.g. regular expression match UUID as primary key `(?P<pk>[0-9a-f-]+)`:  
 ```
 urlpatterns = {
@@ -222,7 +233,9 @@ def home(request, business_id):
         result = json.dumps(getDataViztype0(business_id))
     return HttpResponse(result)
 ```
-Follow this [tutorial](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1).    
+Follow this [tutorial](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1) to build a REST API.    
+
+
 
 
 ### Auto-generate data models from database tables
@@ -231,16 +244,22 @@ $ python manage.py inspectdb > models.py
 ```
 After running this command, modify class names in the `models.py` file.     
 Add <AppName> to every class name. E.g.   
-For app "apis", change `class Bucketlist` -> `class ApisBucketlist`   
+For app "example", change `class Bucketlist` -> `class ExampleBucketlist`   
 For app "yelp", change `class Business` -> `class YelpBusiness`    
 Follow the instructions in the `models.py` file, make sure model definitions are correct.   
 Then move the `models.py` file to the corresponding app folder.    
-So every app would have their own models without conflicting with other apps.   
+So every app would have their own models without conflicting with other apps.    
+This is an example of the Django data models created.      
+https://github.com/Nov05/django-tally/blob/master/example/models.py    
+You can query with or without Django data models. E.g.   
+https://github.com/Nov05/django-tally/blob/master/tallylib/sql.py     
+  
 
 
 ### Debug
 Issue: [Django “ValueError: source code string cannot contain null bytes”](https://stackoverflow.com/questions/52273840/django-valueerror-source-code-string-cannot-contain-null-bytes)  
 Solution: You can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.         
+
 
 
 ### spaCy
@@ -272,6 +291,8 @@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5
 Put the following folder in the repo (same level with `manage.py`).       
 **spacy.load("en_core_web_sm/en_core_web_sm-2.2.5")** with `__init__.py`  
 CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodeError when loading a model, while Windows 10 locally or deployment from MacOS seem fine.   
+
+
 
 
 ### Database configuration   
@@ -318,6 +339,7 @@ Go to the application `Configuration` page, choose `Software`.
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration.png?raw=true">
 Add system environment variables there.   
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_19_34-django-tally%20-%20Configuration.png?raw=true">   
+
 
 
 

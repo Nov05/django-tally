@@ -93,8 +93,8 @@ if 'RDS_HOSTNAME' in os.environ:
             'HOST': os.environ['RDS_HOSTNAME'],
             'PORT': os.environ['RDS_PORT'],
             'OPTIONS': {
-                            'options': '-c search_path=django,tallyds'
-                        },        
+                'options': '-c search_path=django,tallyds'
+            },        
             'TEST': {
                 # 'NAME': 'test', # test database name
                 'ENGINE': 'django.db.backends.sqlite3',
