@@ -209,10 +209,7 @@ Add system environment variables there.
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_19_34-django-tally%20-%20Configuration.png?raw=true">    
  
 * [Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the database users accordingly.   
-* For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql).   
-* Django admin tables will be migrated to database `django` schema automatically.       
-
-
+* For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql).      
 
 
 
@@ -348,9 +345,9 @@ This is an example of the Django data models created.
 https://github.com/Nov05/django-tally/blob/master/example/models.py    
 You can query with or without Django data models. E.g.   
 https://github.com/Nov05/django-tally/blob/master/tallylib/sql.py     
-**Debug**   
-Issue: [Django “ValueError: source code string cannot contain null bytes”](https://stackoverflow.com/questions/52273840/django-valueerror-source-code-string-cannot-contain-null-bytes)  
-Solution: You can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.         
+【Debug】      
+**Issue:** [Django “ValueError: source code string cannot contain null bytes”](https://stackoverflow.com/questions/52273840/django-valueerror-source-code-string-cannot-contain-null-bytes)  
+**Solution:** You can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.         
 
 
 
