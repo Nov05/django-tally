@@ -28,7 +28,7 @@ def yelpTrendyPhrases(business_id,
     ##################################
     # review data from database is already in datetime descending order.
     current_date = getLatestReviewDate(business_id)
-    past_date = current_date - timedelta(days=days_per_period * periods -1)
+    past_date = current_date - timedelta(days=(days_per_period + bagging_periods) * periods - 1)
     reviews = getReviews(business_id, 
                          starting_date=past_date,
                          ending_date=current_date)
@@ -74,14 +74,19 @@ def yelpTrendyPhrases(business_id,
         doc = nlp(text)
         for i,p in enumerate(doc._.phrases):
             keywords.append([ending_date, p.rank, p.text])
-            if i >= topk-1: 
+            if i >= topk * 1.5: 
                 break  
-    del [df_reviews]
-    df_keywords = pd.DataFrame(keywords, columns=['date', 'rank', 'keywords'])
-    keywords_topk = df_keywords['keywords'].value_counts().index[:topk].tolist()
-    df_keywords = (df_keywords[df_keywords['keywords']
-                    .isin(keywords_topk)])
 
+    del [df_reviews]
+    df_keywords = pd.DataFrame(keywords, 
+                               columns=['date', 'rank', 'keywords'])
+    keywords_topk = (df_keywords['keywords']
+                        .value_counts()
+                        .index[:topk]
+                        .tolist())
+    df_keywords = (df_keywords[df_keywords['keywords']
+                        .isin(keywords_topk)])
+ 
     ##################################
     # Formatting for JSON output
     ##################################
@@ -99,6 +104,8 @@ def yelpTrendyPhrases(business_id,
         data['phrase'] = review['keywords']
         data['rank'] = review['rank']
         row['data'].append(data)
+    result.append(row)
+
     del [df_keywords]
     result = result[::-1]
 
