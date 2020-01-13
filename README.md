@@ -1,4 +1,5 @@
-﻿# django-tally
+﻿# django-tally  
+
 2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
 2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
 2019-01-12 [All SQLs used in this project](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [a D3.js line chart](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)    
@@ -7,6 +8,7 @@
 
 
 ## Deploy to AWS Elastic Beanstalk   
+
 During the deployment, you may need to use the following AWS CLI commands.
 ```  
 $ eb init -p python-3.6 django-tally
@@ -22,7 +24,8 @@ $ eb terminate django-tally
 
 
 
-## Testing URLs    
+## Testing URLs      
+
 http://127.0.0.1:8000/admin   
 Below links are for demonstration.   
 http://127.0.0.1:8000/yelp/index    
@@ -34,7 +37,7 @@ https://www.yelp.com/biz/Iq7NqQD-sESu3vr9iEGuTA (Butters Pancakes & Café)
 http://127.0.0.1:8000/yelp/Iq7NqQD-sESu3vr9iEGuTA?viztype=1    
 https://www.yelp.com/biz/y0GZCNHDbFYr6Rjk3OzgYg (Jarrod's Coffee, Tea & Gallery)    
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1    
-You should get trendy phrases such as "beautiful art", "art gallery", "downtown mesa", etc.    
+You should get trendy phrases such as `"beautiful art"`, `"art gallery"`, `"downtown mesa"`, etc.    
 Below links are examples.      
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1     
 You should get monthly rating counts like below.    
@@ -57,7 +60,7 @@ http://127.0.0.1:8000/bucketlists/1 (get, put, delete)
 
 
 
-## Frequently used commands
+## Frequently Used Commands
 ```
 $ python manage.py runserver
 $ python manage.py makemigrations  
@@ -69,19 +72,23 @@ $ python -m django --version
 ```  
 
 
-## Activate virtual enviroment  
+## Activate Virtual Enviroment   
+  
 (base) PS D:\github\django-tally>     
 ```
+$ pipenv install
 $ pipenv shell
 ```
-Install dependencies: 
+Install dependencies:    
+(If you have download the repo, you can skip this step.)    
 ```
 $ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz
 ```
 
-### Create project 
-If you have downloaded this repo, skip this step.      
-PS D:\github\django-tally>     
+
+## Create A Project  
+     
+【Example】   
 ```
 $ cd C:\Users\guido\.virtualenvs\django-tally-QTYVOJb0\Scripts\
 $ python django-admin.py startproject tally D:\github\django-tally
@@ -91,11 +98,12 @@ project created in directory: D:\github\django-tally
 
 
 ## Run Django app    
-PS D:\github\django-tally>     
+    
 ```
+$ cd path/to/django-tally
 $ python manage.py runserver
 ```   
-Logs:     
+【Logs】           
 ```
 Watching for file changes with StatReloader
 Performing system checks...
@@ -116,6 +124,8 @@ Quit the server with CTRL-BREAK.
 ```
 
 ## Configurate settings.py  
+
+(If you have download the repo, you can skip this step.)    
 ```
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -128,11 +138,13 @@ USE_TZ = True
   
 
 
-## Database configuration   
+## Database configuration  
 
-[AWS: Python RDS Connect: Connecting to a Database](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rds.html#python-rds-connect)  
-[AWS: Adding a Database to Your Elastic Beanstalk Environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.managing.db.html) (Not in use)    
-In the `tally/settings.py` file, edit the database connection configuration.    
+* [AWS: Python RDS Connect: Connecting to a Database](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rds.html#python-rds-connect)  
+* [AWS: Adding a Database to Your Elastic Beanstalk Environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.managing.db.html) (Not in use) 
+   
+In the `tally/settings.py` file, edit the database connection configuration.   
+(If you have download the repo, you can skip this step.)      
 ```
 # Database 
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -155,9 +167,8 @@ if 'RDS_HOSTNAME' in os.environ:
         }
     }
 ```
-
-Locally add system environment variables in the Python virtual environment (No quotation marks).   
-
+【Local Environment】     
+Locally add system environment variables in the Python virtual environment (NO quotation marks).    
 You can add a `.env` file in the django-tally folder, then add the following lines to the file (replace `*` with your credentials). Every time when you start the virtual environment, those variables will be set automatically. (Please make sure that **in the `.gitignore` file `.env` has been added**, or you are exposing the credentials to the Internet.)     
 ```
 RDS_DB_NAME=*
@@ -166,7 +177,7 @@ RDS_PASSWORD=*
 RDS_HOSTNAME=*
 RDS_PORT=*
 ``` 
-
+【Manually】   
 Or you can manually add it every time after you start the virtual environment.   
 For Windows Powershell, use `set VARNAME=value`.   
 For MacOS/Linux use `export VARNAME=value`.   
@@ -177,7 +188,7 @@ For MacOS/Linux use `export VARNAME=value`.
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_HOSTNAME=*.*.us-east-2.rds.amazonaws.com
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>set RDS_PORT=*
 ``` 
-
+【Verification】   
 To make sure the variables are properly created, type `python` then print out `os.environ[<varname>]`.  
 ```
 (django-tally-QTYVOJb0) (base) D:\github\django-tally>python
@@ -190,7 +201,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import os
 >>> os.environ['RDS_DB_NAME']
 ```
-
+【Deployment】
 To configure the instance deployed on AWS Elastic Beanstalk.   
 Go to the application `Configuration` page, choose `Software`.     
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration_.png?raw=true">    
@@ -210,13 +221,10 @@ Add system environment variables there.
 
 If you have downloaded this repo, you can skip this step.      
 ```
-$ cd d:/github/django-tally
-```
-PS D:\github\django-tally> 
-```
+$ cd path/to/django-tally
 $ python manage.py migrate
 ```
-Logs:    
+【Logs】       
 ```
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
@@ -244,13 +252,13 @@ Django migration will create tables automatically in the database.
 
   
 
-
 ## Create Admin User  
-PS D:\github\django-tally> 
+
 ```
+$ cd path/to/django-tally
 $ python manage.py createsuperuser
 ```
-Logs:
+【Logs】      
 ```
 Username (leave blank to use 'guido'): ***
 Email address: admin@example.com
@@ -272,7 +280,8 @@ a**** / T****_******
 
 ## Use Django REST Framework for APIs    
  
-If you have downloaded the repo, you can skip this step.    
+(If you have downloaded the repo, you can skip this step.)
+    
 PS D:\github\django-tally>    
 ```
 # D:\github\django-tally\tally\settings.py
@@ -323,7 +332,7 @@ Follow this [tutorial](https://scotch.io/tutorials/build-a-rest-api-with-django-
 
 
 
-## Auto-generate data models from database tables
+## Auto-Generate Data Models from Database Tables
 
 ```
 $ python manage.py inspectdb > models.py
@@ -339,22 +348,21 @@ This is an example of the Django data models created.
 https://github.com/Nov05/django-tally/blob/master/example/models.py    
 You can query with or without Django data models. E.g.   
 https://github.com/Nov05/django-tally/blob/master/tallylib/sql.py     
-  
-
-
-## Debug
+**Debug**   
 Issue: [Django “ValueError: source code string cannot contain null bytes”](https://stackoverflow.com/questions/52273840/django-valueerror-source-code-string-cannot-contain-null-bytes)  
 Solution: You can simply create a new .py file, copy and paste the `models.py` content to it, then replace the `models.py` file with it.         
 
 
 
 ## spaCy
+
 spaCy models   
 https://spacy.io/usage/models  
 How to install models     
 https://pypi.org/project/spacy/  
 Download spaCy model manually (Not in use)       
 https://github.com/explosion/spacy-models/releases  
+
 You can install spaCy models just like installing a Python package.   
 `pipenv install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz`    
 Then import the models in your code.    
@@ -382,7 +390,8 @@ CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica 
 
 
 
-### Reference  
+## Reference  
+
 [Django Documentation](https://docs.djangoproject.com/en/3.0/)   
 [Django Message Framework](https://docs.djangoproject.com/en/3.0/ref/contrib/messages/)    
 [AWS: Deploying a Django Application to Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html#w510aac13c37c15c13b7b2b3b3)    
