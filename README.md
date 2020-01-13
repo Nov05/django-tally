@@ -158,7 +158,7 @@ if 'RDS_HOSTNAME' in os.environ:
 
 Locally add system environment variables in the Python virtual environment (No quotation marks).   
 
-You can add `.env` in the django-tally folder, and the following lines to the file. Every when you start the virtual environment, those variables will be set automatically.       
+You can add a `.env` file in the django-tally folder, then add the following lines to the file. Every time when you start the virtual environment, those variables will be set automatically.       
 (In `.gitignore` file, `.env` has been added.)    
 ```
 RDS_DB_NAME=*
@@ -191,6 +191,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import os
 >>> os.environ['RDS_DB_NAME']
 ```
+
 To configure the instance deployed on AWS Elastic Beanstalk.   
 Go to the application `Configuration` page, choose `Software`.     
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration_.png?raw=true">    
