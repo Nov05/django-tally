@@ -132,7 +132,7 @@ USE_TZ = True
 
 [AWS: Python RDS Connect: Connecting to a Database](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-rds.html#python-rds-connect)  
 [AWS: Adding a Database to Your Elastic Beanstalk Environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.managing.db.html) (Not in use)    
-In the `tally/settings.py` file, configure database connection.    
+In the `tally/settings.py` file, edit the database connection configuration.    
 ```
 # Database 
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -159,7 +159,7 @@ if 'RDS_HOSTNAME' in os.environ:
 Locally add system environment variables in the Python virtual environment (No quotation marks).   
 
 You can add a `.env` file in the django-tally folder, then add the following lines to the file. Every time when you start the virtual environment, those variables will be set automatically.       
-(In `.gitignore` file, `.env` has been added.)    
+(Please make sure that **in the `.gitignore` file `.env` has been added**, or you are exposing the credentials to the Internet.)     
 ```
 RDS_DB_NAME=*
 RDS_USERNAME=*
