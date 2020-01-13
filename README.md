@@ -197,9 +197,9 @@ Go to the application `Configuration` page, choose `Software`.
 Add system environment variables there.   
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_19_34-django-tally%20-%20Configuration.png?raw=true">    
  
-[Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the database users accordingly.   
-For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql). 
-Django admin tables will be migrated to database `django` schema automatically.       
+* [Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the database users accordingly.   
+* For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql).   
+* Django admin tables will be migrated to database `django` schema automatically.       
 
 
 ### Migration 
