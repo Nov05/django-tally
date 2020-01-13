@@ -168,7 +168,7 @@ if 'RDS_HOSTNAME' in os.environ:
     }
 ```
 【Local Environment】     
-Locally add system environment variables in the Python virtual environment (NO quotation marks).    
+Add system environment variables in the Python virtual environment (NO quotation marks).    
 You can add a `.env` file in the django-tally folder, then add the following lines to the file (replace `*` with your credentials). Every time when you start the virtual environment, those variables will be set automatically. (Please make sure that **in the `.gitignore` file `.env` has been added**, or you are exposing the credentials to the Internet.)     
 ```
 RDS_DB_NAME=*
