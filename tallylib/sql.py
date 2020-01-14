@@ -53,3 +53,19 @@ def getLatestReviewDate(business_id):
         cursor.execute(sql)
         # return a datetime.datatime object
         return cursor.fetchone()[0]
+
+def getLatestReviews(business_id, 
+                     limit=200):
+    sql = f'''
+    SELECT date, 
+           text,
+           stars::INTEGER
+    FROM tallyds.review
+    WHERE business_id = '{business_id}'
+    ORDER BY datetime DESC
+    LIMIT 200;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        # return a list of tuples
+        return cursor.fetchall()

@@ -3,10 +3,6 @@ from requests import Session
 from lxml import html
 import pandas as pd
 
-try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
 
 def yelpScraper(bid):
     '''Takes a url, scrape site for reviews
@@ -35,7 +31,7 @@ def yelpScraper(bid):
                         df = pd.DataFrame([dates, reviews, ratings]).T
                         self.data = pd.concat([self.data, df])
 
-        def scrape(self): # makes it faster
+        def scrape(self): 
             # multithreaded looping
             with Executor(max_workers=40) as e:
                 list(e.map(self.get_data, range(10)))

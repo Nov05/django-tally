@@ -5,14 +5,16 @@ import pandas as pd
 import spacy
 import scattertext as st
 # Local imports
-from tallylib.scraper import yelpScraper
+# from tallylib.scraper import yelpScraper # Deleted on 2020-01-13
+from tallylib.sql import getLatestReviews
 
 # viztype0 (Top 10 Positive/Negative Phrases)
-def getReviewPosNegPhrases(yelpScraperResult):
-    if yelpScraperResult.empty:
-        return pd.DataFrame()
+def getReviewPosNegPhrases(df_reviews):
+    if df_reviews.empty:
+        return pd.DataFrame(), pd.DataFrame()
 
-    df = yelpScraperResult.copy()
+    df = df_reviews.copy()
+    df['stars'] = df['stars'].astype(str)
 
     nlp = spacy.load("en_core_web_sm")
     nlp.Defaults.stop_words |= {'will','because','not','friends',
@@ -26,14 +28,13 @@ def getReviewPosNegPhrases(yelpScraperResult):
     '1','2','3','4', '5','6','7','8','9','0','/','.',','}
 
     corpus = st.CorpusFromPandas(df,
-                                 category_col=2,
-                                 text_col=1,
+                                 category_col='stars',
+                                 text_col='text',
                                  nlp=nlp).build()
-
     term_freq_df = corpus.get_term_freq_df()
-    term_freq_df['highratingscore'] = corpus.get_scaled_f_scores('5.0 star rating')
-    term_freq_df['poorratingscore'] = corpus.get_scaled_f_scores('1.0 star rating')
-    dh = term_freq_df.sort_values(by= 'highratingscore', ascending = False)
+    term_freq_df['highratingscore'] = corpus.get_scaled_f_scores('5')
+    term_freq_df['poorratingscore'] = corpus.get_scaled_f_scores('1')
+    dh = term_freq_df.sort_values(by='highratingscore', ascending = False)
     dh = dh[['highratingscore', 'poorratingscore']]
     dh = dh.reset_index(drop=False)
     dh = dh.rename(columns={'highratingscore': 'score'})
@@ -43,26 +44,19 @@ def getReviewPosNegPhrases(yelpScraperResult):
     return dh.head(10), dh.tail(10)
 
 # viztype3
-def getYelpWordsReviewFreq(yelpScraperResult):
-    if yelpScraperResult.empty:
+def getYelpWordsReviewFreq(df_reviews):
+    if df_reviews.empty:
         return pd.DataFrame()
 
-    df = yelpScraperResult.copy()
+    df = df_reviews.copy()
 
-    df = df.rename(columns = {0:'date', 2:'stars',1:'text'})
-    df['date'] = df['date'].str.replace('\n','')
-    df['date'] = df['date'].str.replace(' ','')
-    df['date'] = df['date'].astype('datetime64[ns]')
-    dict_rating = {'5.0 star rating':5, '4.0 star rating':4, '3.0 star rating':3, 
-                  '2.0 star rating':2, '1.0 star rating':1}
-    df['stars'] = df['stars'].map(dict_rating) 
+    df.columns = ['date', 'text', 'stars']
     df['month'] = df['date'].dt.month
     df['year'] = df['date'].dt.year
     df['week_number_of_year'] = df['date'].dt.week
     df = df.groupby(['year', 'month','week_number_of_year']).mean()
     df = pd.DataFrame(df.to_records()) # flatten groupby column
-    df = df.iloc[::-1]
-    df = df.head(8)
+    df = df.iloc[::-1].head(8)
     df['cumulative_avg_rating'] = df['stars'].mean()
 
     # get the date of last day of the week
@@ -73,20 +67,26 @@ def getYelpWordsReviewFreq(yelpScraperResult):
         date_of_week = datetime.strptime(text, "%Y-W%W-%w").strftime('%Y-%m-%d')
         list.append(date_of_week)
     df['date_of_week'] = list
+    df = df.iloc[::-1]
 
     return df
 
 
 def getDataViztype0(business_id):
-    # do web scraping
+    ''' Deleted on 2020-01-13
+    # do web scraping 
     yelpScraperResult = yelpScraper(business_id)
-    if yelpScraperResult.empty:
+    '''
+    data = getLatestReviews(business_id, limit=200)
+    if len(data)==0:
         return {}
+    df_reviews = pd.DataFrame(data, columns=['date', 'text', 'stars'])
+    df_reviews['date'] = pd.to_datetime(df_reviews['date'])
 
     # viztype0
-    df_positive, df_negative = getReviewPosNegPhrases(yelpScraperResult)
+    df_positive, df_negative = getReviewPosNegPhrases(df_reviews)
     # viztype3
-    df_bydate = getYelpWordsReviewFreq(yelpScraperResult)
+    df_bydate = getYelpWordsReviewFreq(df_reviews)
  
     # API data formatting
     results = {
