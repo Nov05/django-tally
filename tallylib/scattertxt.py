@@ -4,12 +4,14 @@ from datetime import datetime
 import pandas as pd
 import spacy
 import scattertext as st
+import numpy as np
 # Local imports
 # from tallylib.scraper import yelpScraper # Deleted on 2020-01-13
 from tallylib.sql import getLatestReviews
 
 # viztype0 (Top 10 Positive/Negative Phrases)
-def getReviewPosNegPhrases(df_reviews):
+def getReviewPosNegPhrases(df_reviews, topk=10):
+
     if df_reviews.empty:
         return pd.DataFrame(), pd.DataFrame()
 
@@ -18,13 +20,13 @@ def getReviewPosNegPhrases(df_reviews):
 
     nlp = spacy.load("en_core_web_sm")
     nlp.Defaults.stop_words |= {'will','because','not','friends',
-    'amazing','awesome','first','he','check-in',
-    '=','= =','male','u','want', 'u want', 'cuz',
+    'amazing','awesome','first','he','check-in', 'and', 'some',
+    '=','= =','male','u','want', 'u want', 'cuz', 'also', 'find',
     'him',"i've", 'deaf','on', 'her','told','told him',
     'ins', 'check-ins','check-in','check','I', 'i"m', 
-    'i', ' ', 'it', "it's", 'it.','they','coffee','place',
+    'i', ' ', 'it', "it's", 'it.','they','coffee','place', "it 's", "'s", 
     'they', 'the', 'this','its', 'l','-','they','this',
-    'don"t','the ', ' the', 'it', 'i"ve', 'i"m', '!', 
+    'don"t','the ', ' the', 'it', 'i"ve', 'i"m', '!', '&',
     '1','2','3','4', '5','6','7','8','9','0','/','.',','}
 
     corpus = st.CorpusFromPandas(df,
@@ -32,19 +34,35 @@ def getReviewPosNegPhrases(df_reviews):
                                  text_col='text',
                                  nlp=nlp).build()
     term_freq_df = corpus.get_term_freq_df()
-    term_freq_df['highratingscore'] = corpus.get_scaled_f_scores('5')
-    term_freq_df['poorratingscore'] = corpus.get_scaled_f_scores('1')
-    dh = term_freq_df.sort_values(by='highratingscore', ascending = False)
-    dh = dh[['highratingscore', 'poorratingscore']]
-    dh = dh.reset_index(drop=False)
-    dh = dh.rename(columns={'highratingscore': 'score'})
-    dh = dh.drop(columns='poorratingscore')
+
+    categories = df['stars'].unique()
+    high, poor = np.array([]), np.array([])
+    if '5' in categories:
+        high = corpus.get_scaled_f_scores('5')
+    elif '4' in categories:
+        high = corpus.get_scaled_f_scores('4')
+    if '1' in categories:
+        poor =  corpus.get_scaled_f_scores('1')
+    elif '2' in categories:
+        poor = corpus.get_scaled_f_scores('2')
+
+    df_high, df_poor = pd.DataFrame(), pd.DataFrame()
+    columns = ['term', 'score']
+    if high.shape[0] > 0:
+        df_high = pd.DataFrame([term_freq_df.index.tolist(), high]).T
+        df_high = df_high.sort_values(1, ascending=False).head(topk)
+        df_high.columns = columns
+    if poor.shape[0] > 0:
+        df_poor = pd.DataFrame([term_freq_df.index.tolist(), poor]).T
+        df_poor = df_poor.sort_values(1, ascending=False).head(topk)
+        df_poor.columns = columns
 
     # positive dataframe, negative dataframe 
-    return dh.head(10), dh.tail(10)
+    return df_high.head(topk), df_poor.tail(topk)
 
 # viztype3
 def getYelpWordsReviewFreq(df_reviews):
+  
     if df_reviews.empty:
         return pd.DataFrame()
 
@@ -81,26 +99,40 @@ def getDataViztype0(business_id):
     if len(data)==0:
         return {}
     df_reviews = pd.DataFrame(data, columns=['date', 'text', 'stars'])
+    del data
     df_reviews['date'] = pd.to_datetime(df_reviews['date'])
 
     # viztype0
     df_positive, df_negative = getReviewPosNegPhrases(df_reviews)
+    positive, negative = [], []
+    if not df_positive.empty:
+        positive = [{'term': row[0], 'score': row[1]} 
+            for row in df_positive[['term', 'score']].values]
+    if not df_negative.empty:
+        negative = [{'term': row[0], 'score': row[1]} 
+            for row in df_negative[['term', 'score']].values]
+    viztype0 = {
+        'positive': positive, 
+        'negative': negative
+    }
+    del [df_positive, df_negative]
+
     # viztype3
     df_bydate = getYelpWordsReviewFreq(df_reviews)
- 
+    viztype3 = {}
+    if not df_bydate.empty:
+        viztype3 = {
+            'star_data': [{'date': row[0], 
+                           'cumulative_avg_rating': row[1], 
+                           'weekly_avg_rating': row[2]}
+            for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'stars']].values]
+        }
+    del [df_bydate]
+
     # API data formatting
     results = {
-    'viztype0':
-        {'positive': [{'term': row[0], 'score': row[1]} 
-                        for row in df_positive[['term', 'score']].values], 
-            'negative': [{'term': row[0], 'score': row[1]} 
-                        for row in df_negative[['term', 'score']].values]
-        },
-    'viztype3':
-        {'star_data': [{'date': row[0], 'cumulative_avg_rating': row[1], 'weekly_avg_rating': row[2]}
-                        for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'stars']].values]
+        'viztype0': viztype0,
+        'viztype3': viztype3
         }
-    }
-    del [df_positive, df_negative, df_bydate]
 
     return results
