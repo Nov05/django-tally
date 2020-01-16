@@ -4,12 +4,12 @@ from django.http import HttpResponse
 from rest_framework import generics
 import requests
 import json
-# Local
-from .models import YelpYelpScraping
-from .serializers import YelpYelpScrapingSerializer
+# Local imports
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
+from .models import YelpScraping # for testing
+from .serializers import YelpScrapingSerializer # for testing
 
 
 # Query strings -> Main analytics
@@ -34,10 +34,10 @@ def hello(request):
 
 
 # example
-class YelpYelpScrapingCreateView(generics.ListCreateAPIView):
+class YelpScrapingCreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = YelpYelpScraping.objects.all()
-    serializer_class = YelpYelpScrapingSerializer
+    queryset = YelpScraping.objects.all()
+    serializer_class = YelpScrapingSerializer
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
@@ -45,8 +45,8 @@ class YelpYelpScrapingCreateView(generics.ListCreateAPIView):
 
 
 # example
-class YelpYelpScrapingDetailsView(generics.RetrieveUpdateDestroyAPIView):
+class YelpScrapingDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
-    queryset = YelpYelpScraping.objects.all()
-    serializer_class = YelpYelpScrapingSerializer
+    queryset = YelpScraping.objects.all()
+    serializer_class = YelpScrapingSerializer
 

@@ -24,7 +24,7 @@ SECRET_KEY = '8=(-_-7slnn_ul6v#uokp!qxa%l!=#te!f(3j_5k5(deia*jk1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',
+ALLOWED_HOSTS = ['*', # have some security issues here
                  '127.0.0.1',
                  'localhost']
 
@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    'rest_framework', # djangorestframework
+    # 'kombu.transport.django', # avoid setting up RabbitMQ locally
     'example',
-    'yelp',
+    'yelp', # the major app
+    'jobs', # scheduled tasks
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
+
+# celerybeat using database for message broking  
+# BROKER_URL = 'django://'
+# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'

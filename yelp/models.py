@@ -10,7 +10,7 @@ from django.db import models
 import uuid
 
 
-class YelpBusiness(models.Model):
+class Business(models.Model):
     business_id = models.CharField(primary_key=True, max_length=100)
     alias = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -34,11 +34,11 @@ class YelpBusiness(models.Model):
         return "{}".format(self.business_id)
         
     class Meta:
-        managed = False
+        managed = False # Table has already been created in database.
         db_table = 'business'
 
 
-class YelpReview(models.Model):
+class Review(models.Model):
     uuid = models.UUIDField(primary_key=True)
     review_id = models.CharField(max_length=100, blank=True, null=True)
     business_id = models.CharField(max_length=100, blank=True, null=True)
@@ -60,7 +60,8 @@ class YelpReview(models.Model):
         db_table = 'review'
 
 
-class YelpYelpScraping(models.Model):
+# for unit testing
+class YelpScraping(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     review_id = models.CharField(max_length=100, blank=True, null=True)
     business_id = models.CharField(max_length=100, blank=True, null=True)
@@ -79,3 +80,52 @@ class YelpYelpScraping(models.Model):
     class Meta:
         managed = False
         db_table = 'yelp_scraping'
+
+
+# for unit testing
+# Tallyuser-Business relationship 1:n
+class TallyuserBusiness(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tallyuser_id = models.CharField(max_length=100, blank=True, null=True)
+    business_id = models.CharField(max_length=100, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return a human readable representation of the model instance."""
+        return "{}".format(self.tallyuser_id)
+
+    class Meta:
+        managed = False
+        db_table = 'tallyuser_business'
+
+
+class DsVizdata(models.Model):
+    uuid = models.UUIDField(primary_key=True)
+    business_id = models.CharField(max_length=100, blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    viztype = models.SmallIntegerField(blank=True, null=True)
+    vizdata = models.CharField(max_length=10000, blank=True, null=True)
+
+    def __str__(self):
+        """Return a human readable representation of the model instance."""
+        return "{}".format(self.business_id)
+
+    class Meta:
+        managed = False
+        db_table = 'ds_vizdata'
+
+
+class DsVizstatus(models.Model):
+    business_id = models.CharField(primary_key=True, max_length=100)
+    viztype = models.SmallIntegerField()
+    timestamp = models.DateTimeField(blank=True, null=True)
+    triggeredby = models.SmallIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        """Return a human readable representation of the model instance."""
+        return "{}".format(self.business_id)
+
+    class Meta:
+        managed = False
+        db_table = 'ds_vizstatus'
+        unique_together = (('business_id', 'viztype'),)

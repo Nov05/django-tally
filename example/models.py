@@ -13,5 +13,5 @@ class ExampleBucketlist(models.Model):
         return "{}".format(self.name)
     
     class Meta:
-        managed = True # created table in database
+        managed = True # Django will create the table in database
         db_table = 'example_bucketlist'
