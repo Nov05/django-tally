@@ -6,6 +6,38 @@
 
 
 
+## Activate Virtual Enviroment   
+  
+(base) PS D:\github\django-tally>     
+```
+$ pipenv install
+$ pipenv shell
+```
+Install dependencies:    
+(If you have download the repo, you can skip this step.)    
+```
+$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz django-apscheduler
+```
+**Generate requirements.txt**  
+```
+$ pip freeze > requirements.txt
+```
+In the `requirements.txt` file, remove entries for spacy and en_core_web_sm, and add the following lines.
+```
+spacy>=2.0.0,<3.0.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz
+```
+
+## Frequently Used Django Commands
+```
+$ python manage.py runserver
+$ python manage.py makemigrations  
+$ python manage.py migrate  
+$ python manage.py test
+$ python manage.py inspectdb > models.py
+$ pip freeze | Out-File -Encoding UTF8 requirements.txt
+$ python -m django --version
+```  
 
 ## Deploy to AWS Elastic Beanstalk   
 
@@ -20,16 +52,6 @@ $ eb logs
 $ eb config
 $ eb terminate django-tally
 ```
-
-
-## celery
-```
-$ celery -A tally worker -l info
-$ celery -A tally beat -l info
-$ python manage.py celery worker --loglevel=info
-$ python manage.py celery beat --loglevel=info
-``
-
 
 ## Testing URLs      
 
@@ -65,32 +87,6 @@ http://127.0.0.1:8000/bucketlists/1 (get, put, delete)
 [【Testing data documents】](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)  
 [【Testing script Colab】](https://colab.research.google.com/drive/1Gzo2lFj1cEj72mkVoko5rAo-OXaeLwot)  
 
-
-
-## Frequently Used Commands
-```
-$ python manage.py runserver
-$ python manage.py makemigrations  
-$ python manage.py migrate  
-$ python manage.py test
-$ python manage.py inspectdb > models.py
-$ pip freeze | Out-File -Encoding UTF8 requirements.txt
-$ python -m django --version
-```  
-
-
-## Activate Virtual Enviroment   
-  
-(base) PS D:\github\django-tally>     
-```
-$ pipenv install
-$ pipenv shell
-```
-Install dependencies:    
-(If you have download the repo, you can skip this step.)    
-```
-$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz 
-```
 
 
 ## Create A Project  
@@ -392,7 +388,23 @@ Put the following folder in the repo (same level with `manage.py`).
 CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodeError when loading a model, while launching server on Windows 10 locally or deployment from MacOS seem fine.   
 
 
+## Background job scheduling
 
+**Advanced Python Scheduler**  
+```
+$ pipenv install django-apscheduler
+```
+**celery (not in use)** [【Logs】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/celery)  
+```
+$ pipenv install celery
+$ pipenv install django-celery-beat django-celery-result
+```
+```
+$ celery -A tally worker -l info
+$ celery -A tally beat -l info
+$ python manage.py celery worker --loglevel=info
+$ python manage.py celery beat --loglevel=info
+``
 
 ## Reference  
 
