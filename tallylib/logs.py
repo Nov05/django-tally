@@ -1,4 +1,6 @@
 # tallylib/logs.py
+import json
+import pandas as pd
 from datetime import datetime
 # Local imports
 from tallylib.sql import getLogs
@@ -8,11 +10,17 @@ def getViewLogs(business_id, num):
         num = 100
     # a list of tuples
     data = getLogs(business_id, num)
-    results = [[
-        {'uuid': str(d[0])},
-        {'business_id': d[1]},
-        {'job_type': d[2]},
-        {'job_status': d[3]},
-        {'timestamp': d[4].strftime('%Y-%m-%d')}
-        ] for d in data]
-    return results
+    ## return JSON format
+    # results = [[
+    #     {'uuid': str(d[0])},
+    #     {'business_id': d[1]},
+    #     {'job_type': d[2]},
+    #     {'job_status': d[3]},
+    #     {'timestamp': d[4].strftime('%Y-%m-%d')}
+    #     ] for d in data]
+    # return json.dumps(results)
+    return pd.DataFrame(data, columns=['uuid', 
+                                       'business_id',
+                                       'job_type',
+                                       'job_status',
+                                       'timestamp']).to_html()

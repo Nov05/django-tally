@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework', # djangorestframework
     # 'kombu.transport.django', # avoid setting up RabbitMQ locally
+    "django_apscheduler", # django-apscheduler
     'example',
     'yelp', # the major app
-    'jobs', # scheduled tasks
+    'jobs', # app for task scheduling
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,18 @@ STATIC_ROOT = 'static'
 # celerybeat using database for message broking  
 # BROKER_URL = 'django://'
 # CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# django-apscheduler
+# This scheduler config will:
+# - Store jobs in the project database
+# - Execute jobs in threads inside the application process
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+SCHEDULER_AUTOSTART = True
+APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default

@@ -1,7 +1,8 @@
+# jobs/admin.py
 from django.contrib import admin
-
-# Register your models here.
-# Django will create maintenance page in Admin.  
+## Local imports 
 from .models import JobConfig
 
+# Register your models here.
+# Django will create maintenance page in Admin. 
 admin.site.register(JobConfig)

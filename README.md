@@ -16,7 +16,7 @@ $ pipenv shell
 Install dependencies:    
 (If you have download the repo, you can skip this step.)    
 ```
-$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank awscli pylint pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz django-apscheduler
+$ pipenv install django psycopg2-binary djangorestframework spacy lxml scattertext pytextrank pyyaml https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz apscheduler django-apscheduler
 ```
 **Generate requirements.txt**  
 ```
@@ -391,10 +391,15 @@ CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica 
 ## Background job scheduling
 
 **Advanced Python Scheduler**  
+[Official Document](https://apscheduler.readthedocs.io/en/stable/index.html)    
+[A Tutorial](https://medium.com/@mrgrantanderson/replacing-cron-and-running-background-tasks-in-django-using-apscheduler-and-django-apscheduler-d562646c062e)  
+[A simple example](https://github.com/agronholm/apscheduler/blob/master/examples/schedulers/background.py) of setting up a background job by using `apscheduler.schedulers.background.BackgroundScheduler`.    
 ```
 $ pipenv install django-apscheduler
 ```
-**celery (not in use)** [【Logs】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/celery)  
+**Celery (Not In Use)** [【Logs】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/celery)  
+* Celery stopped supporting Windows since version 4.0 upwards   
+* Use django-celery-beat rather than django-celery  
 ```
 $ pipenv install celery
 $ pipenv install django-celery-beat django-celery-result
@@ -404,7 +409,7 @@ $ celery -A tally worker -l info
 $ celery -A tally beat -l info
 $ python manage.py celery worker --loglevel=info
 $ python manage.py celery beat --loglevel=info
-``
+```
 
 ## Reference  
 
@@ -417,4 +422,20 @@ $ python manage.py celery beat --loglevel=info
 [List of Useful URL Patterns](https://simpleisbetterthancomplex.com/references/2016/10/10/url-patterns.html)   
 [Understanding file encoding in VSCode and PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7) 02/27/2019  
 【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)    
-【Repo】[Lily's Django](https://github.com/Lambda-School-Labs/tally-ai-ds/tree/b95c67d7f0989b49a5ab8b89d9e6884233622da3/ElasticBeanstalkDjango_v.0.2/ebdjango)         
+【Repo】[Lily's Django](https://github.com/Lambda-School-Labs/tally-ai-ds/tree/b95c67d7f0989b49a5ab8b89d9e6884233622da3/ElasticBeanstalkDjango_v.0.2/ebdjango)     
+
+
+## Text to ASCII Art
+
+https://onlineasciitools.com/convert-text-to-ascii-art
+Font type: Big  
+
+```
+  _    _      _ _                            _     _ _ 
+ | |  | |    | | |                          | |   | | |
+ | |__| | ___| | | ___   __      _____  _ __| | __| | |
+ |  __  |/ _ \ | |/ _ \  \ \ /\ / / _ \| '__| |/ _` | |
+ | |  | |  __/ | | (_) |  \ V  V / (_) | |  | | (_| |_|
+ |_|  |_|\___|_|_|\___/    \_/\_/ \___/|_|  |_|\__,_(_)
+                                                       
+```

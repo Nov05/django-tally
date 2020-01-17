@@ -4,5 +4,8 @@
     "[powershell]": {
         "files.encoding": "utf8",
         "files.autoGuessEncoding": true
-    }
+    },
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "D:\\Users\\guido\\AppData\\Local\\Continuum\\miniconda3\\envs\\python3.6\\python.exe"
 }
