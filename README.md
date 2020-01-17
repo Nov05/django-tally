@@ -8,8 +8,8 @@
 
 ## Activate Virtual Enviroment   
 
-Miniconda3 or Anaconda3 Python 3.7
-(If you are using Python 3.6 or manage your enviroment in some other way, skip this step.)    
+Miniconda3 or Anaconda3 Python 3.7 [【Logs】](https://github.com/Nov05/yelp-dataset-challenge/blob/master/celery/2020-01-15%20python%203.7%20issue.md)  
+(If you are using Python 3.6 or manage your enviroments in some other way, skip this step.)    
 ```
 $ conda create -n python3.6 python=3.6
 $ pip install pipenv
