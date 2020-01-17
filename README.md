@@ -272,9 +272,6 @@ Password:
 Password (again):
 Superuser created successfully.
 ```
-a**** / T****_******  
-
-
 
 
 
@@ -388,13 +385,13 @@ Put the following folder in the repo (same level with `manage.py`).
 CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica Beanstalk might have UnicodeDecodeError when loading a model, while launching server on Windows 10 locally or deployment from MacOS seem fine.   
 
 
-## Background job scheduling
+## Background Job Scheduling
 
 **Advanced Python Scheduler**  
-[Official Document](https://apscheduler.readthedocs.io/en/stable/index.html)    
-[A Tutorial](https://medium.com/@mrgrantanderson/replacing-cron-and-running-background-tasks-in-django-using-apscheduler-and-django-apscheduler-d562646c062e)  
-[A simple example](https://github.com/agronholm/apscheduler/blob/master/examples/schedulers/background.py) of setting up a background job by using `apscheduler.schedulers.background.BackgroundScheduler`.    
-[My example code](https://github.com/Nov05/django-tally/blob/master/jobs/examples.py), [Logs](https://github.com/Nov05/yelp-dataset-challenge/blob/master/apscheduler/2020-01-17%20backgroud%20job%20example.md)        
+* [Official Document](https://apscheduler.readthedocs.io/en/stable/index.html)    
+* [A Tutorial](https://medium.com/@mrgrantanderson/replacing-cron-and-running-background-tasks-in-django-using-apscheduler-and-django-apscheduler-d562646c062e)  
+* [A simple example](https://github.com/agronholm/apscheduler/blob/master/examples/schedulers/background.py) of setting up a background job by using `apscheduler.schedulers.background.BackgroundScheduler`.    
+* [【My example code】](https://github.com/Nov05/django-tally/blob/master/jobs/examples.py), [Logs](https://github.com/Nov05/yelp-dataset-challenge/blob/master/apscheduler/2020-01-17%20backgroud%20job%20example.md)        
 ```
 $ pipenv install django-apscheduler
 ```
