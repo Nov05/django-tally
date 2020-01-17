@@ -60,7 +60,8 @@ $ aws elasticbeanstalk restart-app-server --environment-name django-tally
 
 ## Testing URLs      
 
-http://127.0.0.1:8000/admin   
+http://127.0.0.1:8000/admin    
+http://127.0.0.1:8000/admin/django_apscheduler/     
 Below links are for demonstration.   
 http://127.0.0.1:8000/yelp/index    
 https://www.yelp.com/biz/aunt-jakes-new-york       
@@ -72,7 +73,7 @@ http://127.0.0.1:8000/yelp/Iq7NqQD-sESu3vr9iEGuTA?viztype=1
 https://www.yelp.com/biz/y0GZCNHDbFYr6Rjk3OzgYg (Jarrod's Coffee, Tea & Gallery)    
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1    
 You should get trendy phrases such as `"beautiful art"`, `"art gallery"`, `"downtown mesa"`, etc.    
-Below links are examples.      
+The links below are 【examples】.      
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1     
 You should get monthly rating counts like below.    
 ```
@@ -87,6 +88,7 @@ http://127.0.0.1:8000/yelp/review/ (create review)
 http://127.0.0.1:8000/yelp/review/9759c0c0-b28a-44ff-b770-4cf303367a60 (get, put, delete, by review UUID)           
 http://127.0.0.1:8000/bucketlists (create)    
 http://127.0.0.1:8000/bucketlists/1 (get, put, delete)   
+http://127.0.0.1:8000/jobs/example (APScheduler background job)     
 
 [【Testing URLs】](https://drive.google.com/file/d/1ziicAiUIfa8dI-qtMs8WJQN_5zbr2l0o/)    
 [【Testing data documents】](https://drive.google.com/open?id=1EKPZh1e88_jnXafk7OJ_euSB54ilmFdJ)  

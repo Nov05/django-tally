@@ -2,7 +2,7 @@
 import os
 import time
 import logging
-from datetime import datetime 
+from datetime import datetime
 from django.conf import settings
 from apscheduler.schedulers import SchedulerAlreadyRunningError
 from django_apscheduler.jobstores import register_events
@@ -56,7 +56,7 @@ def example_hello_world(request):
                           misfire_grace_time=100)
         # Add the scheduled jobs to the Django admin interface
         register_events(scheduler)
-    # APScheduler bug: 
+    # APScheduler bug:
     # RuntimeError('cannot schedule new futures after shutdown')
     except Exception as e:
         print(e)
@@ -100,10 +100,10 @@ Return to http://<host>/jobs/example
 \n\n''')
 
     return HttpResponse(f'''\
-You started the job scheduler. <br>
+You started the job scheduler, or it was already running. <br>
 ... Periodic background job '{job_id}' was scheduled. <br>
 ... Periodic background job '{job_id}' was removed. <br>
-... The job scheduler has been shut down. <br>
+... The job scheduler is still running. <br>
 <br>
 Check your prompt output history. <br>
 <br>
@@ -112,4 +112,6 @@ Ignore the following Django error message. It is somehow misleading. <br>
 ... ERROR: django_apscheduler.events: <br>
 ... ... ... ... ... insert or update on table "django_apscheduler_djangojobexecution" <br>
 ... ... ... ... ... violates foreign key constraint "django_apscheduler_d_job_id_daf5090a_fk_django_ap". <br>
+<br>
+Monitor jobs at <a href="http://127.0.0.1:8000/admin/django_apscheduler/djangojob/">http://127.0.0.1:8000/admin/django_apscheduler/djangojob/</a>.
 ''')
