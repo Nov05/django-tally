@@ -71,7 +71,7 @@ def example_hello_world(request):
     except Exception as e:  # SchedulerAlreadyRunningError
         return HttpResponse(str(e))
 
-    time.sleep(5)
+    time.sleep(3)
     scheduler.remove_job(job_id)
     scheduler.shutdown()
 
