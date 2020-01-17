@@ -1,32 +1,32 @@
+# jobs/examples.py
 import os
 import time
 import logging
+from datetime import datetime 
 from django.conf import settings
-from apscheduler.schedulers.background import BackgroundScheduler
-# from django_apscheduler.jobstores import DjangoJobStore
+from apscheduler.schedulers import SchedulerAlreadyRunningError
 from django_apscheduler.jobstores import register_events
 from django_apscheduler.jobstores import register_job
 from django.http import HttpResponse
+# Local imports
+from jobs.scheduler import scheduler
 
 
 '''
 This example job "helloworld" will be scheduled by API request
 http://127.0.0.1:8000/jobs/example
 '''
-# Create scheduler to run in a thread inside the application process
-scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
 
 
 def helloworld():
-    print(\
-'''
-  _    _      _ _                            _     _ _ 
+    print(r'''
+  _    _      _ _                            _     _ _
  | |  | |    | | |                          | |   | | |
  | |__| | ___| | | ___   __      _____  _ __| | __| | |
  |  __  |/ _ \ | |/ _ \  \ \ /\ / / _ \| '__| |/ _` | |
  | |  | |  __/ | | (_) |  \ V  V / (_) | |  | | (_| |_|
  |_|  |_|\___|_|_|\___/    \_/\_/ \___/|_|  |_|\__,_(_)
-                                                       
+
 ''')
     print(
         'Press Ctrl+{0} to exit.\n'.format('Break' if os.name == 'nt' else 'C'))
@@ -46,39 +46,63 @@ def example_hello_world(request):
     # - Add a scheduled job to the job store on application initialization
     # - The job will execute a model class method at midnight each day
     # - replace_existing in combination with the unique ID prevents duplicate copies of the job
-    scheduler.add_job(helloworld,
-                      'interval',
-                      seconds=1,
-                      id=job_id,
-                      max_instances=1,
-                      replace_existing=True)
+    try:
+        scheduler.add_job(helloworld,
+                          'interval',
+                          seconds=5,
+                          id=job_id,
+                          max_instances=1,
+                          replace_existing=True,
+                          misfire_grace_time=100)
+        # Add the scheduled jobs to the Django admin interface
+        register_events(scheduler)
+    # APScheduler bug: 
+    # RuntimeError('cannot schedule new futures after shutdown')
+    except Exception as e:
+        print(e)
+        return HttpResponse(str(e))
 
-    # Add the scheduled jobs to the Django admin interface
-    register_events(scheduler)
-    # Print out job list
-    print("\n\n")
-    print("========================================================")
-    print("Jobs scheduled: ")
-    # scheduler.print_jobs()
+    # Print out scheduled job list
+    text = ''
     for j in scheduler.get_jobs():
-        print("\t", j)
-    print("========================================================")
-    print("\n\n")
+        text = text + str(j) + '\n'
+    print('''\n\n\
+========================================================
+Jobs scheduled: \n'''
+          + text + '''\
+========================================================
+\n\n''')
 
     try:
         scheduler.start()
-        print("scheduler.start()")
-    except Exception as e:  # SchedulerAlreadyRunningError
+    except SchedulerAlreadyRunningError as e:
+        print(e)
+    except Exception as e:
+        print(e)
         return HttpResponse(str(e))
 
-    time.sleep(3)
-    scheduler.remove_job(job_id)
-    scheduler.shutdown()
+    # give job some time to run
+    time.sleep(14)
+
+    # those steps involve database commit
+    # give them some time to process
+    try:
+        scheduler.remove_job(job_id)
+    except Exception as e:
+        print(e)
+        return HttpResponse(str(e))
+
+    # scheduler.shutdown()
+    print('''\n\n\
+========================================================
+Return to http://<host>/jobs/example
+========================================================
+\n\n''')
 
     return HttpResponse(f'''\
 You started the job scheduler. <br>
-... Job '{job_id}' was scheduled. <br>
-... Job '{job_id}' was removed. <br>
+... Periodic background job '{job_id}' was scheduled. <br>
+... Periodic background job '{job_id}' was removed. <br>
 ... The job scheduler has been shut down. <br>
 <br>
 Check your prompt output history. <br>

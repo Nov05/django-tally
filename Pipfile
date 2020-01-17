@@ -9,13 +9,13 @@ verify_ssl = true
 django = "*"
 psycopg2-binary = "*"
 djangorestframework = "*"
-spacy = "*"
+pyyaml = "*"
 lxml = "*"
 scattertext = "*"
-pytextrank = "*"
-pyyaml = "*"
+spacy = ">=2.0.0,<3.0.0"
 en-core-web-sm = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"}
-apscheduler = "*"
+pytextrank = "*"
+apscheduler = ">=3.6.3"
 django-apscheduler = "*"
 
 [requires]

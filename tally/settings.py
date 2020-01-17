@@ -22,9 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8=(-_-7slnn_ul6v#uokp!qxa%l!=#te!f(3j_5k5(deia*jk1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if 'DJANGO_DEBUG' in os.environ:
+    DEBUG = os.environ['DJANGO_DEBUG']
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = ['*', # have some security issues here
+ALLOWED_HOSTS = ['*',  # have some security issues here
                  '127.0.0.1',
                  'localhost']
 
@@ -38,12 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework', # djangorestframework
+    'rest_framework',  # djangorestframework
     # 'kombu.transport.django', # avoid setting up RabbitMQ locally
-    "django_apscheduler", # django-apscheduler
+    "django_apscheduler",  # django-apscheduler
     'example',
-    'yelp', # the major app
-    'jobs', # app for task scheduling
+    'yelp',  # the major app
+    'jobs',  # app for task scheduling
 ]
 
 MIDDLEWARE = [
@@ -85,7 +88,6 @@ WSGI_APPLICATION = 'tally.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-import os
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
@@ -97,12 +99,16 @@ if 'RDS_HOSTNAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
             'OPTIONS': {
                 'options': '-c search_path=django,tallyds'
-            },        
+            },
             'TEST': {
                 # 'NAME': 'test', # test database name
                 'ENGINE': 'django.db.backends.sqlite3',
             },
         },
+        'sqlite3': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
 
 # Password validation
@@ -128,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'US/Central' # default 'UTC'
+TIME_ZONE = 'US/Central'  # default 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -140,7 +146,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
-# celerybeat using database for message broking  
+# celerybeat using database for message broking
 # BROKER_URL = 'django://'
 # CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
@@ -152,9 +158,34 @@ SCHEDULER_CONFIG = {
     "apscheduler.jobstores.default": {
         "class": "django_apscheduler.jobstores:DjangoJobStore"
     },
-    'apscheduler.executors.processpool': {
+    "apscheduler.executors.processpool": {
         "type": "threadpool"
+        # "type": "processpool"
     },
 }
 SCHEDULER_AUTOSTART = True
-APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     'formatters': {
+#         'default': {
+#             'format': '[%(asctime)s] %(name)s: \n%(levelname)s %(message)s\n'
+#         }
+#     },
+#     'handlers': {
+#         'default': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'default'
+#         }
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['default'],
+#             'level': 'DEBUG',
+#             'propagate': False
+#         }
+#     }
+# }

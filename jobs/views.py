@@ -8,8 +8,14 @@ from tallylib.logs import getViewLogs
 from tallylib.sql import getLogs
 
 
+
+# nothing here, just say hello
+def hello(request):
+    result = "Hello, you are at the Jobs application home page."
+    return HttpResponse(result)
+
 # Query strings
-def home(request, business_id):
+def logs(request, business_id):
     try:
         # get certain number of job logs for a business_id
         # e.g. http://127.0.0.1:8000/jobs/logs/jga_2HO_j4I7tSYf5cCEnQ
@@ -19,7 +25,17 @@ def home(request, business_id):
         return None
 
 
-# nothing here, just say hello
-def hello(request):
-    result = "Hello, you are at the Jobs application home page."
-    return HttpResponse(result)
+# Query strings
+# It is not safe to open this to the internet
+def update(request, job_type):
+    try:
+        # schedule jobs for job_type
+        # e.g. http://127.0.0.1:8000/jobs?job_type=0
+        job_type = request.GET.get('job_type')
+        if job_type == 999:  # schedule all job_types
+            pass 
+        elif job_type == 0: # yelp scraping
+            pass
+        return HttpResponse('')
+    except:
+        return None
