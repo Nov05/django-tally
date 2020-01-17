@@ -7,7 +7,14 @@
 
 
 ## Activate Virtual Enviroment   
-  
+
+Miniconda3 or Anaconda3 Python 3.7
+(If you are using Python 3.6 or manage your enviroment in some other way, skip this step.)    
+```
+$ conda create -n python3.6 python=3.6
+$ pip install pipenv
+$ conda activate python3.6
+```  
 (base) PS D:\github\django-tally>     
 ```
 $ pipenv install
@@ -55,7 +62,21 @@ $ eb terminate django-tally
 $ aws elasticbeanstalk restart-app-server --environment-name django-tally
 ```
 [Install the AWS CLI version 1 Using Python and pip on Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html#awscli-install-windows-pip)     
-[Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)   
+[Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)  
+【Logs】
+```
+(base) PS C:\Users\guido> aws2 --version
+aws-cli/2.0.0dev3 Python/3.7.5 Windows/10 botocore/2.0.0dev2
+(base) PS C:\Users\guido> python --version
+Python 3.7.4
+(base) PS C:\Users\guido> aws --version
+File association not found for extension .py
+aws-cli/1.17.5 Python/3.7.4 Windows/10 botocore/1.13.50
+(base) PS C:\Users\guido> aws2 --version
+aws-cli/2.0.0dev3 Python/3.7.5 Windows/10 botocore/2.0.0dev2
+(base) PS C:\Users\guido> eb --version
+EB CLI 3.17.0 (Python 3.7.4)
+```  
 
 
 ## Testing URLs      
@@ -259,7 +280,7 @@ Django migration will create tables automatically in the database.
 
   
 
-## Create Admin User  
+## Create Django Admin User  
 
 ```
 $ cd path/to/django-tally
@@ -336,7 +357,7 @@ Follow this [tutorial](https://scotch.io/tutorials/build-a-rest-api-with-django-
 
 
 
-## Auto-Generate Data Models from Database Tables
+## Django Auto-Generate Data Models from Database Tables
 
 ```
 $ python manage.py inspectdb > models.py
@@ -434,7 +455,7 @@ $ python manage.py celery beat --loglevel=info
 
 ## Text to ASCII Art
 
-https://onlineasciitools.com/convert-text-to-ascii-art
+https://onlineasciitools.com/convert-text-to-ascii-art   
 Font type: Big  
 
 ```
