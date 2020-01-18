@@ -1,4 +1,14 @@
-﻿# django-tally  
+﻿```
+  _______      _  _                   _____ 
+ |__   __|    | || |           /\    |_   _|
+    | |  __ _ | || | _   _    /  \     | |  
+    | | / _` || || || | | |  / /\ \    | |  
+    | || (_| || || || |_| | / ____ \  _| |_ 
+    |_| \__,_||_||_| \__, |/_/    \_\|_____|
+                      __/ |                 
+                     |___/                   
+```
+# django-tally  
 
 2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
 2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
