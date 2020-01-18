@@ -74,12 +74,16 @@ def getLatestReviews(business_id,
 
 def getLogs(business_id,
             num=100):
+    '''
+    uuid, 
+    business_id,
+    job_type,
+    job_status,
+    timestamp,
+    job_message
+    '''
     sql = f'''
-    SELECT uuid,
-           business_id,
-           job_type,
-           job_status,
-           timestamp
+    SELECT *
     FROM tallyds.job_logs
     WHERE business_id = '{business_id}'
     ORDER BY timestamp DESC
@@ -89,3 +93,12 @@ def getLogs(business_id,
         cursor.execute(sql)
         # return a list of tuples
         return cursor.fetchall()
+
+def getTallyuserBusiness():
+    sql = '''
+    SELECT DISTINCT business_id
+    FROM tallyds.tallyuser_business;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        return [r[0] for r in cursor.fetchall()]

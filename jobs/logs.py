@@ -23,4 +23,6 @@ def getViewLogs(business_id, num):
                                        'business_id',
                                        'job_type',
                                        'job_status',
-                                       'timestamp']).to_html()
+                                       'timestamp',
+                                       'job_message'
+                                       ]).to_html()

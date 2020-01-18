@@ -26,7 +26,10 @@ def yelpScraper(business_id):
                     stars = _html.xpath("//div[@class='review-content']/descendant::div[@class='biz-rating__stars']/div/@title")
                     stars = [float(s.split(' ')[0]) for s in stars]
                     texts = [e.text for e in _html.xpath("//div[@class='review-content']/p")]
-                    results = results + [[date, star, text] for date, star, text in zip(dates, stars, texts)]
+                    review_ids = _html.xpath("//div[@class='review review--with-sidebar']/@data-review-id")
+                    user_ids = [s.split(':')[1] for s in _html.xpath("//div[@class='review review--with-sidebar']/@data-signup-object")]
+                    results = results + [[date, star, text, review_id, user_id] 
+                        for date, star, text, review_id, user_id in zip(dates, stars, texts, review_ids, user_ids)]
         time.sleep(random.uniform(0.1, 0.5))    
     return results
 

@@ -23,7 +23,8 @@ class JobLogs(models.Model):
     job_type = models.SmallIntegerField(blank=True, null=True)
     job_status = models.SmallIntegerField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
-
+    job_message = models.CharField(max_length=500, blank=True, null=True)
+    
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.uuid)
