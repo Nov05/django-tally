@@ -9,6 +9,7 @@ import time
 import random
 
 
+# 2020-01-17 Added review_id, user_id
 def yelpScraper(business_id):
     base_url = "https://www.yelp.com/biz/" # add business id
     api_url = "/review_feed?sort_by=date_desc&start=" # add number
@@ -52,6 +53,8 @@ def ApifyRequest():
     print(opener.open('https://api.apify.com/v2/browser-info').read())
 
 
+# Do NOT use this function for its multi-threading execution could 
+# easily get the AWS IPs blocked.
 def yelpScraperAsync(business_id):
     '''Takes a Yelp business id, scrape site for reviews
     '''
