@@ -106,6 +106,7 @@ You started the job scheduler, or it was already running. <br>
 ... The job scheduler is still running. <br>
 <br>
 Check your prompt output history. <br>
+If it is deployed on AWS Elastic Beanstalk, check "$ eb logs". <br>
 <br>
 Note: <br>
 Ignore the following Django error message. It is somehow misleading. <br>

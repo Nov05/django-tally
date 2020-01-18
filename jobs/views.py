@@ -26,7 +26,7 @@ def logs(request, business_id):
 
 
 # Query strings
-# It is not safe to open this to the internet
+# It is not safe to open these APIs to the internet.
 def update(request, job_type):
     try:
         # schedule jobs for job_type
