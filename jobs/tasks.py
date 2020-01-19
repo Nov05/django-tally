@@ -6,8 +6,8 @@ from tallylib.sql import getTallyuserBusiness
 
 # job_type = 0
 def task_yelpScraper():
-    lst_business = getTallyuserBusiness()
-    print(lst_business)
+    businesse_ids = getTallyuserBusiness() # a list
+    
 
 
 

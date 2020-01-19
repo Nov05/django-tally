@@ -101,4 +101,5 @@ def getTallyuserBusiness():
     '''
     with connection.cursor() as cursor:
         cursor.execute(sql)
+        # return a list of strings
         return [r[0] for r in cursor.fetchall()]

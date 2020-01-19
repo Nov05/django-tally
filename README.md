@@ -428,7 +428,7 @@ CAUTION: You can do it this way, but deployment from Windows 10 to AWS Elastica 
 ## Background Job Scheduling
 
 **Advanced Python Scheduler**  
-* [fAPScheduler official document](https://apscheduler.readthedocs.io/en/stable/index.html)     
+* [APScheduler official document](https://apscheduler.readthedocs.io/en/stable/index.html)     
 * [Django-apscheduler Github repo](https://github.com/jarekwg/django-apscheduler)    
 * [An important tutorial](https://medium.com/@mrgrantanderson/replacing-cron-and-running-background-tasks-in-django-using-apscheduler-and-django-apscheduler-d562646c062e)  
 * [A simple example](https://github.com/agronholm/apscheduler/blob/master/examples/schedulers/background.py) of setting up a background job by using `apscheduler.schedulers.background.BackgroundScheduler`.    

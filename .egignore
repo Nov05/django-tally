@@ -1,0 +1,6 @@
+notebooks/
+.vscode/
+
+READMD.md
+.env
+django-tally.code-workspace
