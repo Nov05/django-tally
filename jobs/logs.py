@@ -3,13 +3,14 @@ import json
 import pandas as pd
 from datetime import datetime
 # Local imports
-from tallylib.sql import getLogs
+from tallylib.sql import getJobLogs
 
-def getViewLogs(business_id, num):
+
+def getViewJobLogs(business_id, num):
     if not num or num==None:
         num = 100
-    # a list of tuples
-    data = getLogs(business_id, num)
+    ## a list of tuples
+    data = getJobLogs(business_id, num)
     ## return JSON format
     # results = [[
     #     {'uuid': str(d[0])},

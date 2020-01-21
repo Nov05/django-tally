@@ -8,8 +8,8 @@ import json
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
-from .models import YelpScraping # for testing
-from .serializers import YelpScrapingSerializer # for testing
+from .models import YelpReview                # for data maintenance
+from .serializers import YelpReviewSerializer # for data maintenance
 
 
 # Query strings -> Main analytics
@@ -34,10 +34,10 @@ def hello(request):
 
 
 # example
-class YelpScrapingCreateView(generics.ListCreateAPIView):
+class YelpReviewCreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = YelpScraping.objects.all()
-    serializer_class = YelpScrapingSerializer
+    queryset = YelpReview.objects.all()
+    serializer_class = YelpReviewSerializer
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
@@ -45,8 +45,8 @@ class YelpScrapingCreateView(generics.ListCreateAPIView):
 
 
 # example
-class YelpScrapingDetailsView(generics.RetrieveUpdateDestroyAPIView):
+class YelpReviewDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
-    queryset = YelpScraping.objects.all()
-    serializer_class = YelpScrapingSerializer
+    queryset = YelpReview.objects.all()
+    serializer_class = YelpReviewSerializer
 

@@ -1,8 +1,19 @@
 # example/tests.py
 from django.test import TestCase
 
-# Create your tests here.
 
+# Create your tests here.
+'''
+https://docs.djangoproject.com/en/3.0/topics/testing/overview/
+When you run your tests, the default behavior of the test utility 
+is to find all the test cases (that is, subclasses of unittest.TestCase) 
+in any file whose name begins with test, automatically build a test suite 
+out of those test cases, and run that suite.
+'''
+
+#######################################################
+# test exmaple - bucket list
+#######################################################
 from .models import ExampleBucketlist
 
 class ModelTestCase(TestCase):
@@ -21,9 +32,14 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
 
 
+#######################################################
+# test exmaple - REST framework
+#######################################################
 from rest_framework.test import APIClient
 from rest_framework import status
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse # removed since Django 2.0
+from django.urls import reverse
+
 
 # Define this after the ModelTestCase
 class ViewTestCase(TestCase):
@@ -32,7 +48,7 @@ class ViewTestCase(TestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         self.client = APIClient()
-        self.bucketlist_data = {'name': 'Go to Ibiza'}
+        self.bucketlist_data = {'name': 'Unit test 001'}
         self.response = self.client.post(
             reverse('create'),
             self.bucketlist_data,
@@ -54,6 +70,7 @@ class ViewTestCase(TestCase):
 
     def test_api_can_update_bucketlist(self):
         """Test the api can update a given bucketlist."""
+        # bucketlist = ExampleBucketlist.objects.get()
         change_bucketlist = {'name': 'Something new'}
         res = self.client.put(
             reverse('details', kwargs={'pk': bucketlist.id}),
@@ -63,7 +80,7 @@ class ViewTestCase(TestCase):
 
     def test_api_can_delete_bucketlist(self):
         """Test the api can delete a bucketlist."""
-        bucketlist = ExampleBucketlist.objects.get()
+        # bucketlist = ExampleBucketlist.objects.get()
         response = self.client.delete(
             reverse('details', kwargs={'pk': bucketlist.id}),
             format='json',

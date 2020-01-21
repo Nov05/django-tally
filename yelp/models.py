@@ -39,7 +39,7 @@ class Business(models.Model):
 
 
 class Review(models.Model):
-    uuid = models.UUIDField(primary_key=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     review_id = models.CharField(max_length=100, blank=True, null=True)
     business_id = models.CharField(max_length=100, blank=True, null=True)
     user_id = models.CharField(max_length=100, blank=True, null=True)
@@ -60,10 +60,8 @@ class Review(models.Model):
         db_table = 'review'
 
 
-# for unit testing
-class YelpScraping(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    review_id = models.CharField(max_length=100, blank=True, null=True)
+class YelpReview(models.Model):
+    review_id = models.CharField(primary_key=True, max_length=100)
     business_id = models.CharField(max_length=100, blank=True, null=True)
     user_id = models.CharField(max_length=100, blank=True, null=True)
     stars = models.FloatField(blank=True, null=True)
@@ -75,40 +73,23 @@ class YelpScraping(models.Model):
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
-        return "{}".format(self.uuid)
+        return f"【Business ID】{self.business_id}, {self.date}, {self.text[:100]}"
 
     class Meta:
         managed = False
-        db_table = 'yelp_scraping'
-
-
-# for unit testing
-# Tallyuser-Business relationship 1:n
-class TallyuserBusiness(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    tallyuser_id = models.CharField(max_length=100, blank=True, null=True)
-    business_id = models.CharField(max_length=100, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        """Return a human readable representation of the model instance."""
-        return "{}".format(self.tallyuser_id)
-
-    class Meta:
-        managed = False
-        db_table = 'tallyuser_business'
+        db_table = 'yelp_review'
 
 
 class DsVizdata(models.Model):
-    uuid = models.UUIDField(primary_key=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     business_id = models.CharField(max_length=100, blank=True, null=True)
-    timestamp = models.DateTimeField(blank=True, null=True)
     viztype = models.SmallIntegerField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
     vizdata = models.CharField(max_length=10000, blank=True, null=True)
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
-        return "{}".format(self.business_id)
+        return "{}, {}".format(self.business_id, self.viztype)
 
     class Meta:
         managed = False
@@ -123,9 +104,27 @@ class DsVizstatus(models.Model):
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
-        return "{}".format(self.business_id)
+        return "{}, {}".format(self.business_id, self.viztype)
 
     class Meta:
         managed = False
         db_table = 'ds_vizstatus'
         unique_together = (('business_id', 'viztype'),)
+
+
+'''for unit testing only
+   when this table hasn't been created in schema "tallyweb"
+   Tallyuser-Business relationship n:n'''
+class TallyuserBusiness(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tallyuser_id = models.CharField(max_length=100, blank=True, null=True)
+    business_id = models.CharField(max_length=100, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return a human readable representation of the model instance."""
+        return f"【Tally User ID】{self.tallyuser_id},【Business ID】{self.business_id}"
+
+    class Meta:
+        managed = False
+        db_table = 'tallyuser_business'

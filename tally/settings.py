@@ -91,6 +91,7 @@ WSGI_APPLICATION = 'tally.wsgi.application'
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
+            # 'ENGINE': 'django.db.backends.sqlite3', # dafault
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
@@ -98,11 +99,11 @@ if 'RDS_HOSTNAME' in os.environ:
             'HOST': os.environ['RDS_HOSTNAME'],
             'PORT': os.environ['RDS_PORT'],
             'OPTIONS': {
-                'options': '-c search_path=django,tallyds'
+                'options': '-c search_path=django,tallyds,public'
             },
             'TEST': {
-                # 'NAME': 'test', # test database name
-                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': 'test_tally', # test database name
+                'NAME': os.environ['RDS_DB_NAME'], # use the same database for testing
             },
         },
     }
@@ -162,6 +163,7 @@ SCHEDULER_CONFIG = {
 SCHEDULER_AUTOSTART = True
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 
+## set up logging format
 # LOGGING = {
 #     "version": 1,
 #     "disable_existing_loggers": False,

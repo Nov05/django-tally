@@ -4,8 +4,8 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 # Local imports
-from tallylib.sql import getLogs
-from jobs.logs import getViewLogs
+from tallylib.sql import getJobLogs
+from jobs.logs import getViewJobLogs
 from jobs.tasks import task_yelpScraper
 
 
@@ -21,7 +21,7 @@ def logs(request, business_id):
         # get certain number of job logs for a business_id
         # e.g. http://127.0.0.1:8000/jobs/logs/jga_2HO_j4I7tSYf5cCEnQ
         num = request.GET.get('num')
-        return HttpResponse(getViewLogs(business_id, num))
+        return HttpResponse(getViewJobLogs(business_id, num))
     except:
         return HttpResponse(result)
 
@@ -38,7 +38,8 @@ def schedule(request):
             pass 
         elif job_type == 0: # yelp scraping
             task_yelpScraper()
-            return HttpResponse('here')
+            result = f"You just triggered Yelp scraping."
+            return HttpResponse(result)
         else:
             return HttpResponse(result)
     except:

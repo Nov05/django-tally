@@ -52,7 +52,7 @@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5
 $ python manage.py runserver
 $ python manage.py makemigrations  
 $ python manage.py migrate  
-$ python manage.py test
+$ python manage.py test --keepdb
 $ python manage.py inspectdb > models.py
 $ python manage.py collectstatic
 $ python -m django --version
@@ -89,13 +89,17 @@ aws-cli/2.0.0dev3 Python/3.7.5 Windows/10 botocore/2.0.0dev2
 (base) PS C:\Users\guido> eb --version
 EB CLI 3.17.0 (Python 3.7.4)
 ```  
+```
+(django-tally-QTYVOJb0) (python3.6) D:\github\django-tally>python manage.py collectstatic
+163 static files copied to 'D:\github\django-tally\static'.
+```
 
 
 ## Testing URLs      
 
 http://127.0.0.1:8000/admin    
 http://127.0.0.1:8000/admin/django_apscheduler/     
-Below links are for demonstration.   
+Below links are for【tesing】.   
 http://127.0.0.1:8000/yelp/index    
 https://www.yelp.com/biz/aunt-jakes-new-york       
 http://127.0.0.1:8000/yelp/aunt-jakes-new-york (by business alias)      
@@ -106,6 +110,7 @@ http://127.0.0.1:8000/yelp/Iq7NqQD-sESu3vr9iEGuTA?viztype=1
 https://www.yelp.com/biz/y0GZCNHDbFYr6Rjk3OzgYg (Jarrod's Coffee, Tea & Gallery)    
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1    
 You should get trendy phrases such as `"beautiful art"`, `"art gallery"`, `"downtown mesa"`, etc.    
+http://127.0.0.1:8000/jobs/logs/jga_2HO_j4I7tSYf5cCEnQ?num=20 (view job logs by business ID)
 The links below are 【examples】.      
 http://127.0.0.1:8000/yelp/y0GZCNHDbFYr6Rjk3OzgYg?viztype=1     
 You should get monthly rating counts like below.    
@@ -454,8 +459,9 @@ $ python manage.py celery beat --loglevel=info
 ## Reference  
 
 [Django Documentation](https://docs.djangoproject.com/en/3.0/)   
+[Python Django Web Framework - Full Course for Beginners Jan 2, 2019](https://www.youtube.com/watch?v=F5mRW0jo-U4)    
 [Django Message Framework](https://docs.djangoproject.com/en/3.0/ref/contrib/messages/)    
-[AWS: Deploying a Django Application to Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html#w510aac13c37c15c13b7b2b3b3)    
+[AWS: Deploying a Django Application to Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html#w510aac13c37c15c13b7b2b3b3)     
 [AWS: Configure the EB CLI](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html)       
 [AWS: My security credentials](https://console.aws.amazon.com/iam/home?#/security_credentials)   
 [Build a REST API with Django – A Test Driven Approach: Part 1](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1)  

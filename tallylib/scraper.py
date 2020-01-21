@@ -20,8 +20,8 @@ def yelpScrapePage(business_id,
     ''' 
     CAUTION: Do NOT use multi-threading to avoid getting blocked.
     '''
-    status_code, results, keep_scraping = None, [], True
-    
+    status_code, results, total_pages, keep_scraping = None, [], 0, True
+
     base_url = "https://www.yelp.com/biz/" # add business id
     api_url = "/review_feed?sort_by=date_desc&start=" # add number
 
@@ -30,69 +30,91 @@ def yelpScrapePage(business_id,
         with s.get(url, timeout=5) as r:    
             status_code = r.status_code
             if status_code != 200:
-                return status_code, results, keep_scraping
+                return status_code, results, total_pages, keep_scraping
+            
+            try:
+                response = dict(r.json()) 
 
-            response = dict(r.json()) 
-            _html = html.fromstring(response['pagination'])
-            text = _html.xpath("//div[@class='page-of-pages arrange_unit arrange_unit--fill']/text()")
-            total_pages = int(text[0].strip().split(' ')[-1])
-            if page+1 > total_pages:
-                keep_scraping = False
-                return status_code, results, keep_scraping
-            
-            _html = html.fromstring(response['review_list'])
-            dates, stars, texts, review_ids, user_ids = [], [], [], [], []
-            dates = _html.xpath("//div[@class='review-content']/descendant::span[@class='rating-qualifier']/text()")
-            dates = [datetime.strptime(d.strip(), format("%m/%d/%Y")) for d in dates]
-            stars = _html.xpath("//div[@class='review-content']/descendant::div[@class='biz-rating__stars']/div/@title")
-            stars = [float(s.split(' ')[0]) for s in stars]
-            texts = [e.text for e in _html.xpath("//div[@class='review-content']/p")]
-            review_ids = _html.xpath("//div[@class='review review--with-sidebar']/@data-review-id")
-            user_ids = [s.split(':')[1] for s in _html.xpath("//div[@class='review review--with-sidebar']/@data-signup-object")]
-            results = [[date, star, text, review_id, user_id] 
-                        for date, star, text, review_id, user_id 
-                        in zip(dates, stars, texts, review_ids, user_ids)]
-            
-            # filter by date
-            if date_range is not None:
-                idx0, idx1 = None, None
-                for i in range(len(dates)):
-                    if dates[i]<=date_range[1]:
-                        idx0 = i
-                        break
-                for i in range(len(dates)):
-                    if dates[len(dates)-1-i]>=date_range[0]:
-                        idx1 = len(dates)-1-i
-                        break
-                if idx0 is None or idx1 is None or idx1<idx0: 
-                    results = []
-                else:
-                    results = results[idx0:idx1+1]
+                # get total pages 
+                _html = html.fromstring(response['pagination'])
+                text = _html.xpath("//div[@class='page-of-pages arrange_unit arrange_unit--fill']/text()")
+                try:
+                    total_pages = int(text[0].strip().split(' ')[-1])
+                except:
+                    total_pages = 0
+                if page+1 >= total_pages:
                     keep_scraping = False
+                if page+1 > total_pages or total_pages == 0:
+                    return status_code, results, total_pages, keep_scraping
 
-    return status_code, results, keep_scraping
+                # get content
+                _html = html.fromstring(response['review_list'])
+                dates, stars, texts, review_ids, user_ids = [], [], [], [], []
+                dates = _html.xpath("//div[@class='review-content']/descendant::span[@class='rating-qualifier']/text()")
+                '''
+                Remove this line you will get "ValueError: time data '' does not match format '%m/%d/%Y'".
+                Some reviews have been linked with preview reviews left by the same user.
+                Those extra dates somehow would be scraped as blank values. Hence we would need to remove them.
+                e.g. https://www.yelp.com/biz/coconut-hut-gilbert?sort_by=date_desc
+                '''
+                dates = [d.strip() for d in dates if d.strip() != '']
+                dates = [datetime.strptime(d.strip(), format("%m/%d/%Y")) for d in dates]
+                stars = _html.xpath("//div[@class='review-content']/descendant::div[@class='biz-rating__stars']/div/@title")
+                stars = [float(s.split(' ')[0]) for s in stars]
+                texts = [e.text for e in _html.xpath("//div[@class='review-content']/p")]
+                review_ids = _html.xpath("//div[@class='review review--with-sidebar']/@data-review-id")
+                user_ids = [s.split(':')[1] for s in _html.xpath("//div[@class='review review--with-sidebar']/@data-signup-object")]
+                results = [[date, star, text, review_id, user_id] 
+                            for date, star, text, review_id, user_id 
+                            in zip(dates, stars, texts, review_ids, user_ids)]
+
+                # filter by date
+                if date_range is not None:
+                    idx0, idx1 = None, None
+                    for i in range(len(dates)):
+                        if dates[i]<=date_range[1]:
+                            idx0 = i
+                            break
+                    for i in range(len(dates)):
+                        if dates[len(dates)-1-i]>=date_range[0]:
+                            idx1 = len(dates)-1-i
+                            break
+                    if idx0 is None or idx1 is None or idx1<idx0: 
+                        results = []
+                    else:
+                        results = results[idx0:idx1+1]
+                        keep_scraping = False
+            except:
+                ## if any error happens, return no results
+                return status_code, [], total_pages, False
+
+    return status_code, results, total_pages, keep_scraping
 
 
 def yelpScraper(business_id,
                 date_range=None):
-    status_code, results = None, []
-    if date_range is not None: print(date_range[0], date_range[1])
-        
+    '''
+    Scrape Yelp pages
+    '''      
+    results, keep_scraping = [], True
     for i in range(1000):
-        status_code, r, keep_scraping = yelpScrapePage(business_id, 
-                                                       page=i, 
-                                                       date_range=date_range)
-        print('keep scraping:', keep_scraping)
+        if keep_scraping==False:
+            break
+        status_code, result, total_pages, keep_scraping = \
+            yelpScrapePage(business_id, 
+                           page=i, 
+                           date_range=date_range)
         if status_code != 200:
             return status_code, []
-        results = results + r
-        if keep_scraping == False:
-            break
+
+        print(f"page {i}, reivews {len(result)} scraped, \
+total pages {total_pages}, keep scraping {keep_scraping}")
+
+        results = results + result
         # scrape slowly to avoid being blocked
-        time.sleep(random.uniform(1, 3))
+        time.sleep(random.uniform(2, 4))
 
     return status_code, results
-
 
 
 ###########################################################################################
@@ -119,7 +141,8 @@ def ApifyRequest():
 # Do NOT use this function for its multi-threading execution could 
 # easily get the AWS IPs blocked.
 def yelpScraperAsync(business_id):
-    '''Takes a Yelp business id, scrape site for reviews
+    '''
+    Takes a Yelp business id, scrape site for reviews
     '''
     base_url = "https://www.yelp.com/biz/" # add business id
     api_url = "/review_feed?sort_by=date_desc&start=" # add number
