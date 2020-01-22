@@ -5,7 +5,7 @@ import random
 import requests
 
 
-# https://luminati.io/
+# 2020-01-22 https://luminati.io/
 class ProxyList():
     def __init__(self, num=None, start=0):
         self.url = ""
@@ -53,7 +53,7 @@ class ProxyList():
 
         return proxy
 
-    def removeProxy(self):
+    def removeProxy(self): # Not in use for the data center IP list
         self.list = self.list[1:]
         
 

@@ -11,6 +11,8 @@ from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
 from tallylib.sql import getLatestVizdata
+from tallylib.sql import updateVizdata
+from tallylib.sql import insertVizdataLog
 
 
 # Query strings -> Main analytics
@@ -18,27 +20,39 @@ from tallylib.sql import getLatestVizdata
 #     to make the APIs more user friendly.
 def home(request, business_id):
     '''get data for views (APIs)'''
-    result = ""
+    returncode, result = 0, ""
     try:
         viztype = request.GET.get('viztype')
-        data = getLatestVizdata(business_id, viztype=int(viztype)) # a list of tuples
+        viztype = int(viztype)
+        data = getLatestVizdata(business_id, viztype=viztype) # a list of tuples
         if len(data) > 0:
                 result = data[0][0]
+                returncode = 0 # success
         else:
-            if viztype == '0': # viztype0 and viztype3
+            if viztype == 0: # viztype0 and viztype3
                 result = json.dumps(getDataViztype0(business_id),
                                     sort_keys=False)
-            elif viztype == '1':    
+                returncode = 0 # success
+            elif viztype == 1:    
                 result = json.dumps(yelpTrendyPhrases(business_id), 
                                     sort_keys=False)
-            elif viztype == '2':     
+                returncode = 0 # success
+            elif viztype == 2:     
                 result = json.dumps(yelpReviewCountMonthly(business_id), 
                                 sort_keys=False)
+                returncode = 0 # success
             else: 
-                result = f"Error: There is no viztype {viztype}."
+                result = f"Error: There is no viztype {str(viztype)}."
+                returncode = 1 # error
+
+            # update table ds_vizdata and ds_vizdata_log
+            if returncode == 0:
+                updateVizdata(business_id, viztype, result)
+                insertVizdataLog(business_id, viztype, triggeredby=1) # triggered by end user
     except Exception as e:
         print(e)
         result = f"Error: Wrong viztype {viztype}<br>{str(e)}"
+        returncode = 1 # error
 
     return HttpResponse(result)
 

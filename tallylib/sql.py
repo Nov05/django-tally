@@ -197,19 +197,23 @@ def getTallyuserBusiness():
         return [r[0] for r in cursor.fetchall()]
 
 
-def insertVizdata(business_id,
+def updateVizdata(business_id,
                   viztype,
                   vizdata):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sql=f'''\
     INSERT INTO tallyds.ds_vizdata VALUES
     (
-        uuid_generate_v4(),
         '{business_id}',
         {viztype},
         '{timestamp}',
         '{vizdata.replace("'", "''")}'
-    );
+    )
+    ON CONFLICT ON CONSTRAINT ds_vizdata_pkey
+    DO UPDATE SET
+        timestamp = excluded.timestamp,
+        vizdata = excluded.vizdata
+    ;
     '''
     sql
     try:
@@ -224,14 +228,14 @@ def insertVizdata(business_id,
 def checkVizdataTimestamp(business_id,
                           viztype,
                           days=14):
+    '''check whether vizdata has been generated within a period'''
     timestamp = datetime.now() - timedelta(days=days)
     sql=f'''
     SELECT count(*)
     FROM tallyds.ds_vizdata
     WHERE business_id = '{business_id}'
     AND viztype = {viztype}
-    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'
-    LIMIT 1; 
+    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'; 
     '''
     try:
         with connection.cursor() as cursor:
@@ -243,9 +247,8 @@ def checkVizdataTimestamp(business_id,
 
 
 def getLatestVizdata(business_id,
-               viztype,
-               days=14,
-               limit=1):
+                     viztype,
+                     days=14):
     timestamp = datetime.now() - timedelta(days=days)
     sql=f'''
     SELECT vizdata, 
@@ -253,9 +256,7 @@ def getLatestVizdata(business_id,
     FROM tallyds.ds_vizdata
     WHERE business_id = '{business_id}'
     AND viztype = {viztype}
-    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'
-    ORDER BY timestamp DESC
-    LIMIT {limit}; 
+    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'; 
     '''
     try:
         with connection.cursor() as cursor:
@@ -265,3 +266,25 @@ def getLatestVizdata(business_id,
     except Exception as e:
         print(e)   
         return {}
+
+
+def insertVizdataLog(business_id,
+                     viztype,
+                     triggeredby):
+    sql=f'''
+    INSERT INTO tallyds.ds_vizdata_log
+    VALUES (
+        uuid_generate_v4(),
+        '{business_id}',
+        {viztype},
+        '{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}',
+        {triggeredby}
+    );
+    '''
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+            return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # failure

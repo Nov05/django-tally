@@ -9,7 +9,8 @@ from tallylib.sql import getTallyuserBusiness
 from tallylib.sql import getLatestYelpReviews
 from tallylib.sql import updateYelpReviews
 from tallylib.sql import insertJobLogs
-from tallylib.sql import insertVizdata
+from tallylib.sql import updateVizdata
+from tallylib.sql import insertVizdataLog
 from tallylib.sql import checkVizdataTimestamp
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
@@ -48,8 +49,8 @@ def task_yelpScraper():
             insertJobLogs(business_id, 0, returncode, job_message)
         else:
             job_message = f"status code {status_code}"
-            if status_code==503:
-                job_message += " possibly got blocked"
+            if status_code==503: # this is special case for web scraping...
+                job_message += " Wasn't able to assign an unblocked proxy IP"
             insertJobLogs(business_id, 0, 1, job_message)
         print(job_message)
 
@@ -68,26 +69,38 @@ def task_getVizdata():
     business_ids = getTallyuserBusiness() # return a list of strings
     for business_id in business_ids:
 
-        # viztype 0 and 3
+        # viztype 0 and 3 
+        # 2020-01-22 viztype 0 and 3 are sharing an API for historical reasons.
+        #     if have time, please change it
+        viztype = 0
         count = checkVizdataTimestamp(business_id, 0, 14)
         if count == 0:
             vizdata = json.dumps(getDataViztype0(business_id),
                                  sort_keys=False)
-            insertVizdata(business_id, 0, vizdata)
+            updateVizdata(business_id, viztype, vizdata)
+            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
 
         # viztype 1
+        viztype = 1
         count = checkVizdataTimestamp(business_id, 1, 14)
         if count == 0:
             vizdata = json.dumps(yelpTrendyPhrases(business_id), 
                                  sort_keys=False)
-            insertVizdata(business_id, 1, vizdata)
+            updateVizdata(business_id, viztype, vizdata)
+            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
 
         # viztype 2
+        viztype = 2
         count = checkVizdataTimestamp(business_id, 2, 14)
         if count == 0:
             vizdata = json.dumps(yelpReviewCountMonthly(business_id), 
                                  sort_keys=False)
-            insertVizdata(business_id, 2, vizdata)
+            updateVizdata(business_id, viztype, vizdata)
+            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
+
+        # insert a log for the task
+        job_message = "Updated viztype 0,1,2,3"
+        insertJobLogs(business_id, 1, 0, job_message)
 
 
 
