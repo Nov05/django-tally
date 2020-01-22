@@ -34,11 +34,7 @@ def schedule(request):
         # schedule jobs for job_type
         # e.g. http://127.0.0.1:8000/jobs/schedule?job_type=0
         job_type = int(request.GET.get('job_type'))
-        if job_type == 999:  # schedule all job_types
-            pass 
-        elif job_type == 0: # yelp scraping
-            task_yelpScraper()
-            result = f"You just triggered Yelp scraping."
+        if job_type == 0: # yelp scraping
             return HttpResponse(result)
         else:
             return HttpResponse(result)

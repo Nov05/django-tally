@@ -2,12 +2,18 @@
 from datetime import datetime
 import time
 import random
+import json
 # Local imports
 from tallylib.scraper import yelpScraper
 from tallylib.sql import getTallyuserBusiness
 from tallylib.sql import getLatestYelpReviews
 from tallylib.sql import updateYelpReviews
 from tallylib.sql import insertJobLogs
+from tallylib.sql import insertVizdata
+from tallylib.sql import checkVizdataTimestamp
+from tallylib.textrank import yelpTrendyPhrases
+from tallylib.scattertxt import getDataViztype0
+from tallylib.statistics import yelpReviewCountMonthly
 
 
 # job_type = 0
@@ -19,7 +25,7 @@ def task_yelpScraper():
     for business_id in business_ids:
         print(f"scraping business ID {business_id}...")
 
-        ## get review date range to scrape 
+        ## get review date range to scrape, e.g.
         # date_range = (datetime.strptime('2018-06-28', '%Y-%m-%d'),
         #               datetime.strptime('2018-07-01', '%Y-%m-%d'))
         latest_reviews = getLatestYelpReviews(business_id, 1)
@@ -51,9 +57,37 @@ def task_yelpScraper():
         # time.sleep(random.uniform(5,20))
 
 
+# job_type = 1
+# 2020-01-22 for 73 cafes in Arizona, it took about 1079 seconds 
+#     to generate JSON data for 4 viztypes (viztype 0 to 3)
 def task_getVizdata():
-    pass 
-    
+    '''
+    Generate visualization data by background jobs for better user experience
+    '''
+    business_ids = []
+    business_ids = getTallyuserBusiness() # return a list of strings
+    for business_id in business_ids:
+
+        # viztype 0 and 3
+        count = checkVizdataTimestamp(business_id, 0, 14)
+        if count == 0:
+            vizdata = json.dumps(getDataViztype0(business_id),
+                                 sort_keys=False)
+            insertVizdata(business_id, 0, vizdata)
+
+        # viztype 1
+        count = checkVizdataTimestamp(business_id, 1, 14)
+        if count == 0:
+            vizdata = json.dumps(yelpTrendyPhrases(business_id), 
+                                 sort_keys=False)
+            insertVizdata(business_id, 1, vizdata)
+
+        # viztype 2
+        count = checkVizdataTimestamp(business_id, 2, 14)
+        if count == 0:
+            vizdata = json.dumps(yelpReviewCountMonthly(business_id), 
+                                 sort_keys=False)
+            insertVizdata(business_id, 2, vizdata)
 
 
 

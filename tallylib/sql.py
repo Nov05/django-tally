@@ -1,5 +1,6 @@
 # tallylib/sql.py
 from datetime import datetime
+from datetime import timedelta
 from django.db import connection
 # Local
 from yelp.models import Review
@@ -141,8 +142,8 @@ def updateYelpReviews(business_id, data):
     if len(data)==0:
         return 0 # returncode success
 
-    s1 = "INSERT INTO tallyds.yelp_review VALUES "
-    s2 = ""
+    s0 = "INSERT INTO tallyds.yelp_review VALUES "
+    s1 = ""
     for d in data:
         d_datetime = d[0].strftime('%Y-%m-%d %H:%M:%S')
         d_date = d[0].strftime('%Y-%m-%d')
@@ -159,7 +160,7 @@ def updateYelpReviews(business_id, data):
 '{d_text}', \
 '{d_now}'),"""
 
-#     s3 = '''
+#     s2 = '''
 # ON CONFLICT ON CONSTRAINT yelp_review_pkey
 # DO UPDATE SET
 #     business_id = excluded.business_id,
@@ -171,11 +172,11 @@ def updateYelpReviews(business_id, data):
 #     text = excluded.text,
 #     timestamp = excluded.timestamp;    
 # '''
-    s3 = '''
+    s2 = '''
 ON CONFLICT ON CONSTRAINT yelp_review_pkey
 DO NOTHING;  
 '''
-    sql= s1 +s2[:-1] + s3
+    sql= s0 +s1[:-1] + s2
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql)
@@ -196,3 +197,71 @@ def getTallyuserBusiness():
         return [r[0] for r in cursor.fetchall()]
 
 
+def insertVizdata(business_id,
+                  viztype,
+                  vizdata):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sql=f'''\
+    INSERT INTO tallyds.ds_vizdata VALUES
+    (
+        uuid_generate_v4(),
+        '{business_id}',
+        {viztype},
+        '{timestamp}',
+        '{vizdata.replace("'", "''")}'
+    );
+    '''
+    sql
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # failure
+
+
+def checkVizdataTimestamp(business_id,
+                          viztype,
+                          days=14):
+    timestamp = datetime.now() - timedelta(days=days)
+    sql=f'''
+    SELECT count(*)
+    FROM tallyds.ds_vizdata
+    WHERE business_id = '{business_id}'
+    AND viztype = {viztype}
+    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'
+    LIMIT 1; 
+    '''
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+            return cursor.fetchall()[0][0]
+    except Exception as e:
+        print(e)
+        return 0
+
+
+def getLatestVizdata(business_id,
+               viztype,
+               days=14,
+               limit=1):
+    timestamp = datetime.now() - timedelta(days=days)
+    sql=f'''
+    SELECT vizdata, 
+           timestamp
+    FROM tallyds.ds_vizdata
+    WHERE business_id = '{business_id}'
+    AND viztype = {viztype}
+    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'
+    ORDER BY timestamp DESC
+    LIMIT {limit}; 
+    '''
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+            # return a list of tuples
+            return cursor.fetchall()
+    except Exception as e:
+        print(e)   
+        return {}

@@ -110,6 +110,10 @@ def yelpScraper(business_id,
                 date_range=None):
     '''
     Scrape Yelp pages
+    2020-01-22 If there is not a date range set, could scrape the first page,
+        get the total_pages, then for the rest pages, utilize multi-threading.
+        But I don't have time to do it. And sometimes it is not a bad idea to 
+        keep the design simple.
     '''      
     results, keep_scraping = [], True
     for i in range(1000):
@@ -127,8 +131,8 @@ total pages {total_pages}, keep scraping {keep_scraping}")
 
         results = results + result
 
-        # scrape page by page of a business slowly to avoid being blocked
-        time.sleep(random.uniform(2, 4))
+        ## scrape page by page of a business slowly to avoid being blocked
+        # time.sleep(random.uniform(2, 4))
 
     return status_code, results
 
