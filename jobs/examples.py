@@ -44,7 +44,7 @@ def example_hello_world(request):
     # Adding this job here instead of to crons.
     # This will do the following:
     # - Add a scheduled job to the job store on application initialization
-    # - The job will execute a model class method at midnight each day
+    # - The job will execute a function periodically
     # - replace_existing in combination with the unique ID prevents duplicate copies of the job
     try:
         scheduler.add_job(helloworld,

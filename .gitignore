@@ -1,5 +1,6 @@
 # django-tally local virtual environment settings 
 .env
+ips-static.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

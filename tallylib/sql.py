@@ -77,7 +77,7 @@ def getLatestReviews(business_id,
 def getLatestYelpReviews(business_id, 
                      limit=1):
     sql = f'''
-    SELECT date, 
+    SELECT datetime, 
            text,
            stars::INTEGER
     FROM tallyds.yelp_review
@@ -179,7 +179,8 @@ DO NOTHING;
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql)
-    except:
+    except Exception as e:
+        print(e)
         return 1 # returncode 1 = failure
     return 0 # returncode 0 = success
 
@@ -193,3 +194,5 @@ def getTallyuserBusiness():
         cursor.execute(sql)
         # return a list of strings
         return [r[0] for r in cursor.fetchall()]
+
+
