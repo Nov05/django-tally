@@ -34,8 +34,6 @@ def scheduleJobs():
         # Hook into the apscheduler logger
         logging.basicConfig()
         logging.getLogger('apscheduler').setLevel(logging.DEBUG)
-
-
     try:
         scheduler.add_job(task_yelpScraper,
                         'interval',
