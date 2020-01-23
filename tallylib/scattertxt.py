@@ -3,11 +3,13 @@ import sys
 from datetime import datetime
 import pandas as pd
 import spacy
-import scattertext as st
+# import scattertext as st
+import pytextrank
 import numpy as np
 # Local imports
 # from tallylib.scraper import yelpScraper # Deleted on 2020-01-13
 from tallylib.sql import getLatestReviews
+
 
 # viztype0 (Top 10 Positive/Negative Phrases)
 def getReviewPosNegPhrases(df_reviews, topk=10):
@@ -15,50 +17,39 @@ def getReviewPosNegPhrases(df_reviews, topk=10):
     if df_reviews.empty:
         return pd.DataFrame(), pd.DataFrame()
 
-    df = df_reviews.copy()
-    df['stars'] = df['stars'].astype(str)
-
+    df = df_reviews.copy() # columns=['date', 'text', 'stars']
+    df_high = df[df['stars']==5]
+    if len(df_high)==0:
+        df_high = df[df['stars']==4]
+    df_poor = df[df['stars']==1]
+    if len(df_poor)==0:
+        df_poor = df[df['stars']==3]
+  
     nlp = spacy.load("en_core_web_sm")
-    nlp.Defaults.stop_words |= {'will','because','not','friends',
-    'amazing','awesome','first','he','check-in', 'and', 'some',
-    '=','= =','male','u','want', 'u want', 'cuz', 'also', 'find',
-    'him',"i've", 'deaf','on', 'her','told','told him',
-    'ins', 'check-ins','check-in','check','I', 'i"m', 
-    'i', ' ', 'it', "it's", 'it.','they','coffee','place', "it 's", "'s", 
-    'they', 'the', 'this','its', 'l','-','they','this',
-    'don"t','the ', ' the', 'it', 'i"ve', 'i"m', '!', '&',
-    '1','2','3','4', '5','6','7','8','9','0','/','.',','}
+    textrank = pytextrank.TextRank()
+    nlp.add_pipe(textrank.PipelineComponent, name="textrank", last=True)
 
-    corpus = st.CorpusFromPandas(df,
-                                 category_col='stars',
-                                 text_col='text',
-                                 nlp=nlp).build()
-    term_freq_df = corpus.get_term_freq_df()
-
-    categories = df['stars'].unique()
-    high, poor = np.array([]), np.array([])
-    if '5' in categories:
-        high = corpus.get_scaled_f_scores('5')
-    elif '4' in categories:
-        high = corpus.get_scaled_f_scores('4')
-    if '1' in categories:
-        poor =  corpus.get_scaled_f_scores('1')
-    elif '2' in categories:
-        poor = corpus.get_scaled_f_scores('2')
-
-    df_high, df_poor = pd.DataFrame(), pd.DataFrame()
     columns = ['term', 'score']
-    if high.shape[0] > 0:
-        df_high = pd.DataFrame([term_freq_df.index.tolist(), high]).T
-        df_high = df_high.sort_values(1, ascending=False).head(topk)
-        df_high.columns = columns
-    if poor.shape[0] > 0:
-        df_poor = pd.DataFrame([term_freq_df.index.tolist(), poor]).T
-        df_poor = df_poor.sort_values(1, ascending=False).head(topk)
-        df_poor.columns = columns
 
+    text = " ".join(df_high['text'])
+    doc = nlp(text)
+    phrases = []
+    for i, p in enumerate(doc._.phrases):
+        phrases.append([p.text, p.rank])
+        if i >= topk: break
+    df_high = pd.DataFrame(phrases, columns=columns)
+
+    text = " ".join(df_poor['text'])
+    doc = nlp(text)
+    phrases = []
+    for i, p in enumerate(doc._.phrases):
+        phrases.append([p.text, p.rank])
+        if i >= topk: break
+    df_poor = pd.DataFrame(phrases, columns=columns)
+ 
     # positive dataframe, negative dataframe 
-    return df_high.head(topk), df_poor.tail(topk)
+    return df_high, df_poor
+
 
 # viztype3
 def getYelpWordsReviewFreq(df_reviews):
