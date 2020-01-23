@@ -93,6 +93,10 @@ EB CLI 3.17.0 (Python 3.7.4)
 (django-tally-QTYVOJb0) (python3.6) D:\github\django-tally>python manage.py collectstatic
 163 static files copied to 'D:\github\django-tally\static'.
 ```
+【AWS Elastic Beanstalk Configuration】
+`All Applications` -> `django-tally` -> `Configuration` -> `Software` -> `Change`:   
+Set `WSGIPath` = tally/wsgi.py    
+Set system environment variables here too    
 
 
 ## Testing URLs      
