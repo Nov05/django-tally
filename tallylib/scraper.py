@@ -31,7 +31,7 @@ def yelpScrapePage(business_id,
     url = base_url + business_id + api_url + str(page*20)
 
     with Session() as s:
-        for _ in range(50): # try many times until find a working proxy
+        for _ in range(200): # try many times until find a working proxy
             # if status_code == 503: # possibly get blocked
             #     proxylist.removeProxy() # remove the proxy IP from the list
             proxy = proxylist.getProxy() # get a new proxy IP
@@ -87,18 +87,22 @@ def yelpScrapePage(business_id,
             if date_range is not None:
                 idx0, idx1 = None, None
                 for i in range(len(dates)):
-                    if dates[i]<=date_range[1]:
+                    if dates[i] <= date_range[1]:
                         idx0 = i
                         break
                 for i in range(len(dates)):
-                    if dates[len(dates)-1-i]>=date_range[0]:
+                    if dates[len(dates)-1-i] >= date_range[0]:
                         idx1 = len(dates)-1-i
                         break
-                if idx0 is None or idx1 is None or idx1<idx0: 
+
+                if idx0 is None or idx1 is None or idx1 < idx0: 
                     results = []
                 else:
                     results = results[idx0:idx1+1]
+
+                if idx1 is None or idx1 < len(dates):
                     keep_scraping = False
+
         except Exception as e:
             print(e)
             return status_code, [], total_pages, False
@@ -116,7 +120,7 @@ def yelpScraper(business_id,
         keep the design simple.
     '''      
     results, keep_scraping = [], True
-    for i in range(1000):
+    for i in range(1000): # assume no business has not than 1000 pages of reivews
         if keep_scraping==False:
             break
         status_code, result, total_pages, keep_scraping = \

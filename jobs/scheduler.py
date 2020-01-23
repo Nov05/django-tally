@@ -29,45 +29,50 @@ scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
 ###################################################################
 # Schedule Jobs for Tasks
 ###################################################################
-if settings.DEBUG:
-    # Hook into the apscheduler logger
-    logging.basicConfig()
-    logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+def scheduleJobs():
+    if settings.DEBUG:
+        # Hook into the apscheduler logger
+        logging.basicConfig()
+        logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
-try:
-    scheduler.add_job(task_yelpScraper,
-                      'interval',
-                      days=7,
-                      id='task_yelpScraper',
-                      max_instances=1,
-                      replace_existing=True,
-                      misfire_grace_time=100)
-    scheduler.add_job(task_getVizdata,
-                      'interval',
-                      days=14,
-                      id="task_getVizdata",
-                      max_instances=1,
-                      replace_existing=True,
-                      misfire_grace_time=100)
-    register_events(scheduler)
-    ## schedule a job that runs immediately
-    # scheduler.get_job(job_id ="task_getVizdata").modify(next_run_time=datetime.now())
-    scheduler.start()
-except Exception as e:
-    print(e)
+    try:
+        scheduler.add_job(task_yelpScraper,
+                        'interval',
+                        days=7,
+                        id='task_yelpScraper',
+                        max_instances=1,
+                        replace_existing=True,
+                        misfire_grace_time=100)
+        scheduler.add_job(task_getVizdata,
+                        'interval',
+                        days=14,
+                        id="task_getVizdata",
+                        max_instances=1, 
+                        replace_existing=True,
+                        misfire_grace_time=100)
+        register_events(scheduler)
+        ## schedule a job that runs immediately
+        # scheduler.get_job(job_id ="task_yelpScraper").modify(next_run_time=datetime.now())
+        # scheduler.get_job(job_id ="task_getVizdata").modify(next_run_time=datetime.now())
+        scheduler.start()
+    except Exception as e:
+        print(e)
 
-# Print out scheduled job list
-text = ''
-for j in scheduler.get_jobs():
-    text = text + str(j) + '\n'
-print('''\n\n\
+    # Print out scheduled job list
+    text = ''
+    for j in scheduler.get_jobs():
+        text = text + str(j) + '\n'
+    print('''\n\n\
 ========================================================
 Jobs scheduled: \n'''
-          + text + '''\
+        + text + '''\
 ========================================================
-\n\n''')
+    \n\n''')
 
-# try:
-#     scheduler.remove_job(job_id)
-# except Exception as e:
-#     print(e)
+    # try:
+    #     scheduler.remove_job(job_id)
+    # except Exception as e:
+    #     print(e)
+
+
+scheduleJobs()

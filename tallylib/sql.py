@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.db import connection
 # Local
-from yelp.models import Review
+# from yelp.models import AllReview # Django data model
 '''
 2020-01-10 Database table "tallyds.review" has the following index created.
     "CREATE INDEX idx_review ON tallyds.review (business_id, datetime DESC);"
@@ -17,13 +17,22 @@ def getReviews(business_id,
                starting_date, 
                ending_date):
     sql = f'''
-    SELECT uuid, date, text FROM tallyds.review
+    SELECT date, 
+           text 
+    FROM tallyds.yelp_review
     WHERE business_id = '{business_id}'
     AND datetime >= '{starting_date}'
     AND datetime <= '{ending_date}'
     ORDER BY datetime DESC;
     '''
-    return [[record.date, record.text] for record in Review.objects.raw(sql)]
+    # return [[record.date, record.text] 
+    #     for record in AllReview.objects.raw(sql)] # query by Django data model
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return cursor.fetchall()
+    except Exception as e:
+        print(e)
 
 
 # Query without Django data models
@@ -33,52 +42,43 @@ def getReviewCountMonthly(business_id,
     SELECT extract(year from date)::INTEGER AS year,
            extract(month from date)::INTEGER AS month,
            count(*) AS count
-    FROM tallyds.review AS r
+    FROM tallyds.yelp_review AS r
     WHERE business_id = '{business_id}'
     GROUP BY 1, 2
     ORDER BY 1 DESC, 2 DESC
     LIMIT {number_of_months};
     '''
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        # return a tuple
-        return cursor.fetchall()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            # return a tuple
+            return cursor.fetchall()
+    except Exception as e:
+        print(e)
 
     
 def getLatestReviewDate(business_id):
     sql = f'''
     SELECT datetime
-    FROM tallyds.review
+    FROM tallyds.yelp_review
     WHERE business_id = '{business_id}'
     ORDER BY datetime DESC
     LIMIT 1;
     '''
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        # return a datetime.datatime object
-        return cursor.fetchone()[0]
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            # return [(datetime.datetime(2018, 10, 14, 0, 0),)]
+            return cursor.fetchall()
+    except Exception as e:
+        print(e)
+        return []
 
 
 def getLatestReviews(business_id, 
                      limit=200):
     sql = f'''
     SELECT date, 
-           text,
-           stars::INTEGER
-    FROM tallyds.review
-    WHERE business_id = '{business_id}'
-    ORDER BY datetime DESC
-    LIMIT {limit};
-    '''
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        # return a list of tuples
-        return cursor.fetchall()
-
-def getLatestYelpReviews(business_id, 
-                     limit=1):
-    sql = f'''
-    SELECT datetime, 
            text,
            stars::INTEGER
     FROM tallyds.yelp_review
@@ -90,6 +90,43 @@ def getLatestYelpReviews(business_id,
         cursor.execute(sql)
         # return a list of tuples
         return cursor.fetchall()
+
+
+def getLatestYelpReviewLog(business_id):
+    sql = f'''
+    SELECT datetime
+    FROM tallyds.yelp_review_log
+    WHERE business_id = '{business_id}'
+    ORDER BY datetime DESC
+    LIMIT 1;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        # return a list of tuples
+        return cursor.fetchall()
+
+
+def insertYelpReviewLog(business_id,
+                        date):
+    sql = f"""
+    INSERT INTO tallyds.yelp_review_log VALUES
+    (
+        '{business_id}',
+        '{date.strftime('%Y-%m-%d')}',
+        CURRENT_TIMESTAMP
+    )
+    ON CONFLICT ON CONSTRAINT yelp_review_log_pkey
+    DO UPDATE SET
+        datetime = excluded.datetime,
+        timestamp = excluded.timestamp
+    ;
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+    except Exception as e:
+        print(e)
+
 
 def getJobLogs(business_id,
                limit=100):
@@ -131,7 +168,6 @@ def insertJobLogs(business_id,
         with connection.cursor() as cursor:
             cursor.execute(sql)
     except Exception as e:
-        print(sql)
         print(str(e))
         return 1 # returncode failure
     return 0 # returncode success
@@ -150,7 +186,7 @@ def updateYelpReviews(business_id, data):
         d_time = d[0].strftime('%H:%M:%S')
         d_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         d_text = d[2].replace("'", "''")
-        s2 = s2 + f"""\n    ('{d[3]}', \
+        s1 = s1 + f"""\n    ('{d[3]}', \
 '{business_id}', \
 '{d[4]}', \
 {d[1]}, \
@@ -186,10 +222,11 @@ DO NOTHING;
     return 0 # returncode 0 = success
 
 
-def getTallyuserBusiness():
+def getTallyBusiness():
+    '''Businesses selected by Tally users'''
     sql = '''
-    SELECT DISTINCT business_id
-    FROM tallyds.tallyuser_business;
+    SELECT business_id
+    FROM tallyds.tally_business;
     '''
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -197,16 +234,48 @@ def getTallyuserBusiness():
         return [r[0] for r in cursor.fetchall()]
 
 
+def isTallyBusiness(business_id):
+    sql = f"""
+    SELECT business_id
+    FROM tallyds.tally_business
+    WHERE business_id = '{business_id}';
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            # return a list of strings
+            return len(cursor.fetchall()) > 0
+    except Exception as e:
+        print(e)
+        return False
+
+
+def insertTallyBusiness(business_id):
+    sql = f"""
+    INSERT INTO tallyds.tally_business VALUES
+    (
+        '{business_id}',
+        CURRENT_TIMESTAMP
+    );
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # error
+
+
 def updateVizdata(business_id,
                   viztype,
                   vizdata):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sql=f'''\
     INSERT INTO tallyds.ds_vizdata VALUES
     (
         '{business_id}',
         {viztype},
-        '{timestamp}',
+        current_timestamp,
         '{vizdata.replace("'", "''")}'
     )
     ON CONFLICT ON CONSTRAINT ds_vizdata_pkey

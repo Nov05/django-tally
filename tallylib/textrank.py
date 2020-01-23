@@ -27,13 +27,17 @@ def yelpTrendyPhrases(business_id,
     # Get reivews from database
     ##################################
     # review data from database is already in datetime descending order.
-    current_date = getLatestReviewDate(business_id)
+    data = getLatestReviewDate(business_id) # [(datetime.datetime(2018, 10, 14, 0, 0),)]
+    if len(data) == 0:
+        return []
+    else:
+        current_date = data[0][0]
     past_date = current_date - timedelta(days=(days_per_period + bagging_periods) * periods - 1)
     reviews = getReviews(business_id, 
                          starting_date=past_date,
                          ending_date=current_date)
     if reviews == []:
-        return {}
+        return []
     # Here using pandas dataframe is not a good practice.
     # However there is not enough time to change right now.
     df_reviews = pd.DataFrame(reviews, columns=['date', 'text'])
@@ -109,7 +113,7 @@ def yelpTrendyPhrases(business_id,
     del [df_keywords]
     result = result[::-1]
 
-    return result
+    return result # return a list of dictionaries
 
 
     

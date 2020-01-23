@@ -5,14 +5,15 @@ from rest_framework import generics
 import requests
 import json
 # Local imports
-from .models import YelpReview                # example
-from .serializers import YelpReviewSerializer # example
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
 from tallylib.sql import getLatestVizdata
 from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
+from tallylib.sql import isTallyBusiness
+from tallylib.sql import insertTallyBusiness
+from jobs.tasks import task_yelpScraper
 
 
 # Query strings -> Main analytics
@@ -22,6 +23,10 @@ def home(request, business_id):
     '''get data for views (APIs)'''
     returncode, result = 0, ""
     try:
+        if not isTallyBusiness(business_id):
+            task_yelpScraper([business_id], job_type=1) # triggered by end user
+            insertTallyBusiness(business_id)
+
         viztype = request.GET.get('viztype')
         viztype = int(viztype)
         data = getLatestVizdata(business_id, viztype=viztype) # a list of tuples
@@ -61,22 +66,4 @@ def home(request, business_id):
 def hello(request):
     result = "Hello, you are at the Tally Yelp Analytics home page."
     return HttpResponse(result)
-
-
-# example (do NOT change data in tallyds.yelp_review)
-class YelpReviewCreateView(generics.ListCreateAPIView):
-    """This class defines the create behavior of our rest api."""
-    queryset = YelpReview.objects.all()
-    serializer_class = YelpReviewSerializer
-
-    def perform_create(self, serializer):
-        """Save the post data when creating a new bucketlist."""
-        serializer.save()
-
-
-# example (do NOT change data in tallyds.yelp_review)
-class YelpReviewDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    """This class handles the http GET, PUT and DELETE requests."""
-    queryset = YelpReview.objects.all()
-    serializer_class = YelpReviewSerializer
 

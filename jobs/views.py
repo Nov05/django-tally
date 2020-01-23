@@ -14,6 +14,7 @@ def hello(request):
     result = "Hello, you are at the Jobs application home page."
     return HttpResponse(result)
 
+
 # Query strings
 def logs(request, business_id):
     result = ''
@@ -28,7 +29,7 @@ def logs(request, business_id):
 
 # Query strings
 # It is not safe to open these APIs to the internet.
-def schedule(request):
+def reset(request):
     result = ''
     try:
         # schedule jobs for job_type
