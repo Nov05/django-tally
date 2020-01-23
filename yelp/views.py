@@ -44,7 +44,7 @@ def home(request, business_id):
                 returncode = 0 # success
             elif viztype == 2:     
                 result = json.dumps(yelpReviewCountMonthly(business_id), 
-                                sort_keys=False)
+                                    sort_keys=False)
                 returncode = 0 # success
             else: 
                 result = f"Error: There is no viztype {str(viztype)}."

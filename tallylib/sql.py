@@ -5,13 +5,12 @@ from django.db import connection
 # Local
 # from yelp.models import AllReview # Django data model
 '''
-2020-01-10 Database table "tallyds.review" has the following index created.
-    "CREATE INDEX idx_review ON tallyds.review (business_id, datetime DESC);"
-2020-01-15 Database table "tallyds.job_logs has the following index created.
-    "
+2020-01-10 Pay attention to the indexes created on the tables.
 '''
 
-
+###############################################################
+# tallyds.yelp_review
+###############################################################
 # Query with Django data models
 def getReviews(business_id, 
                starting_date, 
@@ -92,87 +91,6 @@ def getLatestReviews(business_id,
         return cursor.fetchall()
 
 
-def getLatestYelpReviewLog(business_id):
-    sql = f'''
-    SELECT datetime
-    FROM tallyds.yelp_review_log
-    WHERE business_id = '{business_id}'
-    ORDER BY datetime DESC
-    LIMIT 1;
-    '''
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        # return a list of tuples
-        return cursor.fetchall()
-
-
-def insertYelpReviewLog(business_id,
-                        date):
-    sql = f"""
-    INSERT INTO tallyds.yelp_review_log VALUES
-    (
-        '{business_id}',
-        '{date.strftime('%Y-%m-%d')}',
-        CURRENT_TIMESTAMP
-    )
-    ON CONFLICT ON CONSTRAINT yelp_review_log_pkey
-    DO UPDATE SET
-        datetime = excluded.datetime,
-        timestamp = excluded.timestamp
-    ;
-    """
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(sql)
-    except Exception as e:
-        print(e)
-
-
-def getJobLogs(business_id,
-               limit=100):
-    # uuid, 
-    # business_id,
-    # job_type,
-    # job_status,
-    # timestamp,
-    # job_message
-    sql = f'''
-    SELECT *
-    FROM tallyds.job_log
-    WHERE business_id = '{business_id}'
-    ORDER BY timestamp DESC
-    LIMIT {limit};
-    '''
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        # return a list of tuples
-        return cursor.fetchall()
-
-
-def insertJobLogs(business_id,
-                  job_type,
-                  job_status,
-                  job_message):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    sql = f'''\
-    INSERT INTO tallyds.job_log
-    VALUES (
-        uuid_generate_v4(), 
-	    '{business_id}',
-	    {job_type},
-	    {job_status},
-	    '{timestamp}',
-        '{job_message}'
-    );'''
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(sql)
-    except Exception as e:
-        print(str(e))
-        return 1 # returncode failure
-    return 0 # returncode success
-
-
 def updateYelpReviews(business_id, data):
     # data columns: datetime, star, text, review_id, user_id
     if len(data)==0:
@@ -220,6 +138,93 @@ DO NOTHING;
         print(e)
         return 1 # returncode 1 = failure
     return 0 # returncode 0 = success
+    
+
+###############################################################
+# tallyds.yelp_reivew_log
+###############################################################
+def getLatestYelpReviewLog(business_id):
+    sql = f'''
+    SELECT datetime
+    FROM tallyds.yelp_review_log
+    WHERE business_id = '{business_id}'
+    ORDER BY datetime DESC
+    LIMIT 1;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        # return a list of tuples
+        return cursor.fetchall()
+
+
+def insertYelpReviewLog(business_id,
+                        date):
+    sql = f"""
+    INSERT INTO tallyds.yelp_review_log VALUES
+    (
+        '{business_id}',
+        '{date.strftime('%Y-%m-%d')}',
+        CURRENT_TIMESTAMP
+    )
+    ON CONFLICT ON CONSTRAINT yelp_review_log_pkey
+    DO UPDATE SET
+        datetime = excluded.datetime,
+        timestamp = excluded.timestamp
+    ;
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+    except Exception as e:
+        print(e)
+
+
+###############################################################
+# tallyds.job_log
+###############################################################
+def getJobLogs(business_id,
+               limit=100):
+    # uuid, 
+    # business_id,
+    # job_type,
+    # job_status,
+    # timestamp,
+    # job_message
+    sql = f'''
+    SELECT *
+    FROM tallyds.job_log
+    WHERE business_id = '{business_id}'
+    ORDER BY timestamp DESC
+    LIMIT {limit};
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        # return a list of tuples
+        return cursor.fetchall()
+
+
+def insertJobLogs(business_id,
+                  job_type,
+                  job_status,
+                  job_message):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sql = f'''\
+    INSERT INTO tallyds.job_log
+    VALUES (
+        uuid_generate_v4(), 
+	    '{business_id}',
+	    {job_type},
+	    {job_status},
+	    '{timestamp}',
+        '{job_message}'
+    );'''
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+    except Exception as e:
+        print(str(e))
+        return 1 # returncode failure
+    return 0 # returncode success
 
 
 def getTallyBusiness():
@@ -250,6 +255,9 @@ def isTallyBusiness(business_id):
         return False
 
 
+###############################################################
+# tallyds.tally_business
+###############################################################
 def insertTallyBusiness(business_id):
     sql = f"""
     INSERT INTO tallyds.tally_business VALUES
@@ -267,6 +275,9 @@ def insertTallyBusiness(business_id):
         return 1 # error
 
 
+###############################################################
+# tallyds.ds_vizdata
+###############################################################
 def updateVizdata(business_id,
                   viztype,
                   vizdata):
@@ -337,6 +348,9 @@ def getLatestVizdata(business_id,
         return {}
 
 
+###############################################################
+# tallyds.ds_vizdata_log
+###############################################################
 def insertVizdataLog(business_id,
                      viztype,
                      triggeredby):

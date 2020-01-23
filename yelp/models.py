@@ -39,28 +39,6 @@ class YelpBusiness(models.Model):
 
 
 class YelpReview(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    review_id = models.CharField(max_length=100, blank=True, null=True)
-    business_id = models.CharField(max_length=100, blank=True, null=True)
-    user_id = models.CharField(max_length=100, blank=True, null=True)
-    stars = models.FloatField(blank=True, null=True)
-    datetime = models.DateTimeField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
-    text = models.CharField(max_length=5000, blank=True, null=True)
-    timestamp = models.DateTimeField(blank=True, null=True)
-    data_source = models.SmallIntegerField(blank=True, null=True)
-
-    def __str__(self):
-        """Return a human readable representation of the model instance."""
-        return "{}".format(self.uuid)
-
-    class Meta:
-        managed = False
-        db_table = 'all_review'
-
-
-class YelpReview(models.Model):
     review_id = models.CharField(primary_key=True, max_length=100)
     business_id = models.CharField(max_length=100, blank=True, null=True)
     user_id = models.CharField(max_length=100, blank=True, null=True)
