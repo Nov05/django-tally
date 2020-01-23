@@ -138,7 +138,7 @@ DO NOTHING;
         print(e)
         return 1 # returncode 1 = failure
     return 0 # returncode 0 = success
-    
+
 
 ###############################################################
 # tallyds.yelp_reivew_log
@@ -227,6 +227,9 @@ def insertJobLogs(business_id,
     return 0 # returncode success
 
 
+###############################################################
+# tallyds.tally_business
+###############################################################
 def getTallyBusiness():
     '''Businesses selected by Tally users'''
     sql = '''
@@ -255,16 +258,15 @@ def isTallyBusiness(business_id):
         return False
 
 
-###############################################################
-# tallyds.tally_business
-###############################################################
 def insertTallyBusiness(business_id):
     sql = f"""
     INSERT INTO tallyds.tally_business VALUES
     (
         '{business_id}',
         CURRENT_TIMESTAMP
-    );
+    )
+    ON CONFLICT ON CONSTRAINT tally_business_pkey
+    DO NOTHING;
     """
     try:
         with connection.cursor() as cursor:
