@@ -34,7 +34,7 @@ $ pipenv shell
 Install dependencies:    
 (If you have download the repo, you can skip this step.)    
 ```
-$ pipenv install django psycopg2-binary djangorestframework pyyaml lxml scattertext "spacy>=2.0.0,<3.0.0" https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz pytextrank "apscheduler>=3.6.3" django-apscheduler
+$ pipenv install django psycopg2-binary djangorestframework pyyaml lxml "spacy>=2.0.0,<3.0.0" https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz pytextrank "apscheduler>=3.6.3" django-apscheduler
 ```
 **Generate requirements.txt**  
 ```
