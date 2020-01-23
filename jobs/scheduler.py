@@ -45,7 +45,7 @@ def scheduleJobs():
                         misfire_grace_time=100)
         scheduler.add_job(task_getVizdata,
                         'interval',
-                        days=14,
+                        days=1,
                         id="task_getVizdata",
                         max_instances=1, 
                         replace_existing=True,
