@@ -58,29 +58,31 @@ def getYelpWordsReviewFreq(df_reviews):
         return pd.DataFrame()
 
     df = df_reviews.copy()
+    df.columns = ['date', 'stars']
 
-    df.columns = ['date', 'text', 'stars']
-    df['month'] = df['date'].dt.month
+    # get 'weekly_avg_rating', 'cumulative_avg_rating'
     df['year'] = df['date'].dt.year
     df['week_number_of_year'] = df['date'].dt.week
-    df = df.groupby(['year', 'month','week_number_of_year']).mean()
-    df = pd.DataFrame(df.to_records()) # flatten groupby column
-    df = df.iloc[::-1].head(8)
-    df['cumulative_avg_rating'] = df['stars'].mean()
+    df = df.drop('date', axis=1)
+    gb = df.groupby(['year', 'week_number_of_year'])
+    df = gb.mean().reset_index().rename(columns={"stars":"weekly_avg_rating"})
+    df['count'] = gb.count().values
+    df = df.tail(8)
+    df['cumulative_avg_rating'] = df['weekly_avg_rating'].cumsum()/df['count'].cumsum()
 
     # get the date of last day of the week
-    list = []
+    lst = []
     for _, row in df.iterrows():
         text = str(row['year'].astype(int)) + '-W' + \
                str(row['week_number_of_year'].astype(int)) + '-6'
         date_of_week = datetime.strptime(text, "%Y-W%W-%w").strftime('%Y-%m-%d')
-        list.append(date_of_week)
-    df['date_of_week'] = list
-    df = df.iloc[::-1]
+        lst.append(date_of_week)
+    df['date_of_week'] = lst
 
     return df
 
 
+# get viztype 0 and 3 for the endpoint ?viztype=0
 def getDataViztype0(business_id):
     ''' Deleted on 2020-01-13
     # do web scraping 
@@ -109,14 +111,14 @@ def getDataViztype0(business_id):
     del [df_positive, df_negative]
 
     # viztype3
-    df_bydate = getYelpWordsReviewFreq(df_reviews)
+    df_bydate = getYelpWordsReviewFreq(df_reviews.drop('text', axis=1))
     viztype3 = {}
-    if not df_bydate.empty:
+    if df_bydate is not None and not df_bydate.empty:
         viztype3 = {
             'star_data': [{'date': row[0], 
                            'cumulative_avg_rating': row[1], 
                            'weekly_avg_rating': row[2]}
-            for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'stars']].values]
+            for row in df_bydate[['date_of_week', 'cumulative_avg_rating', 'weekly_avg_rating']].values]
         }
     del [df_bydate]
 

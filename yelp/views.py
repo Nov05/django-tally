@@ -56,7 +56,7 @@ def home(request, business_id):
                 insertVizdataLog(business_id, viztype, triggeredby=1) # triggered by end user
     except Exception as e:
         print(e)
-        result = f"Error: Wrong viztype {viztype}<br>{str(e)}"
+        # result = f"Error: Wrong viztype {viztype}<br>{str(e)}"
         returncode = 1 # error
 
     return HttpResponse(result)
