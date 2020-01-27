@@ -3,9 +3,11 @@ import os
 import time
 import random
 import requests
+from django.conf import settings
 
 
 # 2020-01-22 https://luminati.io/
+# For now it is using data center IPs for lower cost
 class ProxyList():
     def __init__(self, num=None, start=0):
         self.url = ""
@@ -16,9 +18,10 @@ class ProxyList():
         if num:
             if num<0 or num>20000:
                 return
-        if 'PROXY_LIST_URL' not in os.environ:
+        if settings.URL_PROXY_LIST is None \
+            or len(settings.URL_PROXY_LIST) == 0:
             return
-        self.url = os.environ['PROXY_LIST_URL']
+        self.url = settings.URL_PROXY_LIST
         for _ in range(5): # try 5 times if failed
             try:
                 response = requests.get(self.url, timeout=5)
@@ -33,7 +36,7 @@ class ProxyList():
                     # start from random position of the list
                     idx = random.randint(1, len(self.list)-1)
                     self.list = self.list[idx:] + self.list[:idx]
-                    print(f"Retrieved {len(self.list)} IPs for the proxy list.")
+                    print(f"Retrieved {len(self.list)} IPs from the proxy list.")
                     break
             except:
                 self.list = []

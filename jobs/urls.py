@@ -3,19 +3,22 @@ from django.urls import path
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 # view functions
+from jobs.examples import example_hello_world # job examples
 from jobs.views import hello
 from jobs.views import logs
-# from jobs.views import reset
-from jobs.scheduler import scheduleJobs
-from jobs.examples import example_hello_world # job examples
+from jobs.views import schedule
+from jobs.views import trigger
+from jobs.views import pause
+from jobs.views import resume
 
-# http://127.0.0.1:8000/jobs/...
+
+# http://<host>/jobs/...
 urlpatterns = {
     path('', hello, name='hello'),
-    # update background jobs
-    path('reset', scheduleJobs, name='reset'),
-    # check job logs for certain business_id
-    # e.g. http://127.0.0.1:8000/jobs/logs/jga_2HO_j4I7tSYf5cCEnQ
+    path('schedule', schedule, name='schedule'),
+    path('trigger', trigger, name='trigger'),
+    path('pause', pause, name='pause'),
+    path('resume', resume, name='resume'),
     path('logs/<slug:business_id>', logs, name='home'),
     path('example', example_hello_world, name='examples')
 }

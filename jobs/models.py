@@ -5,15 +5,14 @@ import uuid
 # Create your models here.
 
 class JobConfig(models.Model):
-    job_type = models.SmallIntegerField(primary_key=True)
-    job_type_desc = models.CharField(max_length=200, blank=True, null=True)
+    job_id = models.CharField(max_length=100, blank=False, null=False, primary_key=True)
+    job_desc = models.CharField(max_length=200, blank=True, null=True)
     job_rate = models.FloatField(blank=True, null=True)
-    job_api = models.CharField(max_length=100, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
-        return f"【Job Type】{self.job_type},【Description】{self.job_type_desc},【Job Rate】every {self.job_rate} day(s)"
+        return f"【Job ID】{self.job_id},【Description】{self.job_desc},【Job Rate】every {self.job_rate} day(s)"
 
     class Meta:
         managed = False

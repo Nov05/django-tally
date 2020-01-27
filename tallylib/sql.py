@@ -1,4 +1,5 @@
 # tallylib/sql.py
+import time
 from datetime import datetime
 from datetime import timedelta
 from django.db import connection
@@ -227,6 +228,19 @@ def insertJobLogs(business_id,
     return 0 # returncode success
 
 
+
+###############################################################
+# tallyds.job_config
+###############################################################
+def getJobConfig():
+    sql = """
+    SELECT * FROM tallyds.job_config;
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        return  cursor.fetchall() # return a list of tuples
+
+
 ###############################################################
 # tallyds.tally_business
 ###############################################################
@@ -370,6 +384,22 @@ def insertVizdataLog(business_id,
         with connection.cursor() as cursor:
             cursor.execute(sql) 
             return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # failure
+
+
+###############################################################
+# tallyds.task_business
+###############################################################
+def insertTaskBusiness():
+    try:
+        sql = "DELETE FROM tallyds.task_business;"
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+
+        sql = """
+        """
     except Exception as e:
         print(e)
         return 1 # failure

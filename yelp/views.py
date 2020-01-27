@@ -1,19 +1,26 @@
 from django.shortcuts import render
-# Create your views here.
 from django.http import HttpResponse
-from rest_framework import generics
 import requests
 import json
 # Local imports
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
+from tallylib.sentiment import yelpReviewSentiment
 from tallylib.sql import getLatestVizdata
 from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
 from tallylib.sql import isTallyBusiness
 from tallylib.sql import insertTallyBusiness
-from jobs.tasks import task_yelpScraper
+from tasks.tasks import task_yelpScraper
+
+
+# Create your views here.
+
+# Nothing here but say hello
+def hello(request):
+    result = "Hello, you are at the Tally Yelp Analytics home page."
+    return HttpResponse(result)
 
 
 # Query strings -> Main analytics
@@ -46,8 +53,12 @@ def home(request, business_id):
                 result = json.dumps(yelpReviewCountMonthly(business_id), 
                                     sort_keys=False)
                 returncode = 0 # success
+            elif viztype == 4:
+                result = json.dumps(yelpReviewSentiment(business_id), 
+                                    sort_keys=False)
+                returncode = 0 # success
             else: 
-                result = f"Error: There is no viztype {str(viztype)}."
+                print(f"Error: There is no viztype {str(viztype)}.")
                 returncode = 1 # error
 
             # update table ds_vizdata and ds_vizdata_log
@@ -56,14 +67,7 @@ def home(request, business_id):
                 insertVizdataLog(business_id, viztype, triggeredby=1) # triggered by end user
     except Exception as e:
         print(e)
-        # result = f"Error: Wrong viztype {viztype}<br>{str(e)}"
         returncode = 1 # error
 
-    return HttpResponse(result)
-
-
-# Nothing here
-def hello(request):
-    result = "Hello, you are at the Tally Yelp Analytics home page."
     return HttpResponse(result)
 

@@ -19,7 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8=(-_-7slnn_ul6v#uokp!qxa%l!=#te!f(3j_5k5(deia*jk1'
+if 'DJANGO_SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if 'DJANGO_DEBUG' in os.environ:
@@ -43,10 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # djangorestframework
     # 'kombu.transport.django', # avoid setting up RabbitMQ locally
-    "django_apscheduler",  # django-apscheduler
+    "django_apscheduler",  # background job scheduler
     'example',
     'yelp',  # the major app
-    'jobs',  # app for task scheduling
+    'jobs',  # job scheduling
+    'tasks', # tasks execution
 ]
 
 MIDDLEWARE = [
@@ -91,7 +93,6 @@ WSGI_APPLICATION = 'tally.wsgi.application'
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
-            # 'ENGINE': 'django.db.backends.sqlite3', # dafault
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
@@ -187,3 +188,10 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 #         }
 #     }
 # }
+
+
+# Proxy IP list URL
+if 'URL_PROXY_LIST' in os.environ:
+    URL_PROXY_LIST=os.environ['URL_PROXY_LIST']
+if 'URL_YELP_API_KEYS' in os.environ:
+    URL_YELP_API_KEYS=os.environ['URL_YELP_API_KEYS']

@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('example/', include('example.urls')), # example app
     path('yelp/', include('yelp.urls')),
-    path('jobs/', include('jobs.urls'))
+    path('jobs/', include('jobs.urls')),
+    path('tasks/', include('tasks.urls'))
 ]

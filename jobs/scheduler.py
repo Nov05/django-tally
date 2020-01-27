@@ -8,8 +8,9 @@ from apscheduler.schedulers import SchedulerAlreadyRunningError
 from django_apscheduler.jobstores import register_events
 from django_apscheduler.jobstores import register_job
 # local imports
-from jobs.tasks import task_yelpScraper
-from jobs.tasks import task_getVizdata
+from tallylib.sql import getJobConfig
+from tasks.tasks import task_yelpScraper
+from tasks.tasks import task_getVizdata
 
 
 # In jobs/app.py the following code will start the scheduler
@@ -34,44 +35,92 @@ def scheduleJobs():
         # Hook into the apscheduler logger
         logging.basicConfig()
         logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+
+    # get job configurations
+    # [(job_id, job_desc, job_rate, timestamp)]
+    job_configs = getJobConfig()
+
     try:
-        scheduler.add_job(task_yelpScraper,
-                        'interval',
-                        days=7,
-                        id='task_yelpScraper',
-                        max_instances=1,
-                        replace_existing=True,
-                        misfire_grace_time=100)
-        scheduler.add_job(task_getVizdata,
-                        'interval',
-                        days=1,
-                        id="task_getVizdata",
-                        max_instances=1, 
-                        replace_existing=True,
-                        misfire_grace_time=100)
+        for job_id, _, job_rate, _ in job_configs:
+            if job_id == 'task_yelpScraper' and job_rate > 0:
+                scheduler.add_job(
+                    task_yelpScraper,
+                    'interval',
+                    days=job_rate,
+                    id='task_yelpScraper',
+                    max_instances=1,
+                    replace_existing=True,
+                    misfire_grace_time=100)
+            elif job_id == "task_getVizdata" and job_rate > 0:
+                scheduler.add_job(
+                    task_getVizdata,
+                    'interval',
+                    days=job_rate,
+                    id="task_getVizdata",
+                    max_instances=1, 
+                    replace_existing=True,
+                    misfire_grace_time=100)
+
         register_events(scheduler)
-        ## schedule a job that runs immediately
-        # scheduler.get_job(job_id ="task_yelpScraper").modify(next_run_time=datetime.now())
-        # scheduler.get_job(job_id ="task_getVizdata").modify(next_run_time=datetime.now())
         scheduler.start()
     except Exception as e:
         print(e)
 
     # Print out scheduled job list
     text = ''
-    for j in scheduler.get_jobs():
-        text = text + str(j) + '\n'
-    print('''\n\n\
+    for job in scheduler.get_jobs():
+        text = text + str(job) + '\n'
+    text = ("""\n\n\
 ========================================================
-Jobs scheduled: \n'''
-        + text + '''\
+Jobs scheduled: \n""" 
++ text + """\
 ========================================================
-    \n\n''')
-
-    # try:
-    #     scheduler.remove_job(job_id)
-    # except Exception as e:
-    #     print(e)
+\n""")
+    print(text)
+    return text.replace('\n', '<br>')
 
 
 scheduleJobs()
+
+
+###################################################################
+# Run Jobs Immediately
+###################################################################
+def triggerJobs(job_id):
+    ## schedule a job that runs immediately
+    try:
+        if job_id == "task_yelpScraper":
+            scheduler.get_job(job_id="task_yelpScraper").modify(next_run_time=datetime.now())
+        elif job_id == "task_getVizdata":
+            scheduler.get_job(job_id="task_getVizdata").modify(next_run_time=datetime.now())
+    except Exception as e:
+        print(e)
+        return str(e)
+    return f"Next run time to run <b>{job_id}</b> is set to now."
+
+
+###################################################################
+# Pause Jobs
+###################################################################
+def pauseJobs():
+    try:
+        for job in scheduler.get_jobs():
+            job.pause()
+    except Exception as e:
+        print(e)
+        return (str(e))
+    return "Jobs are paused."
+
+###################################################################
+# Resume Jobs
+###################################################################
+def resumeJobs():
+    try:
+        for job in scheduler.get_jobs():
+            job.resume()
+    except Exception as e:
+        print(e)
+        return(str(e))
+    return "Jobs are resumed."
+
+    
