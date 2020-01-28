@@ -364,6 +364,19 @@ def getLatestVizdata(business_id,
         return {}
 
 
+def deleteVizdata(business_id):
+    sql = """
+    DELETE FROM tallyds.ds_vizdata WHERE business_id = {business_id};
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+            return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # failure
+
+
 ###############################################################
 # tallyds.ds_vizdata_log
 ###############################################################
@@ -392,14 +405,24 @@ def insertVizdataLog(business_id,
 ###############################################################
 # tallyds.task_business
 ###############################################################
-def insertTaskBusiness():
+def insertTaskBusiness(businesses): # list of business IDs
+    try:
+        s1 = ""
+        for business in businesses:
+            s1 = s1 + ""
+        sql = "INSERT INTO tallyds.task_business VALUES" + s1 + \
+            "ON CONFLICT ON CONSTRAINT task_business_pkey DO NOTHING;"
+        return 0 # success
+    except Exception as e:
+        print(e)
+        return 1 # failure
+
+    
+def deleteTaskBusiness():
     try:
         sql = "DELETE FROM tallyds.task_business;"
         with connection.cursor() as cursor:
             cursor.execute(sql) 
-
-        sql = """
-        """
+            return 0 # success
     except Exception as e:
         print(e)
-        return 1 # failure

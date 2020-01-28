@@ -74,7 +74,8 @@ $ aws elasticbeanstalk restart-app-server --environment-name django-tally
 ```
 [Install the AWS CLI version 1 Using Python and pip on Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html#awscli-install-windows-pip)  
 [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)      
-[Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)  
+[Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)   
+[AWS eb config](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-config.html)    
 【Logs】
 ```
 (base) PS C:\Users\guido> aws2 --version

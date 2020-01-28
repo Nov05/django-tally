@@ -7,6 +7,7 @@ from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
 from tallylib.sentiment import yelpReviewSentiment
+from tallylib.sql import deleteVizdata
 from tallylib.sql import getLatestVizdata
 from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
@@ -31,6 +32,7 @@ def home(request, business_id):
     returncode, result = 0, ""
     try:
         if not isTallyBusiness(business_id):
+            deleteVizdata(business_id)
             task_yelpScraper([business_id], job_type=1) # triggered by end user
             insertTallyBusiness(business_id)
 
