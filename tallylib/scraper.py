@@ -10,6 +10,7 @@ import time
 import random
 ## Local imports
 from tallylib.proxy import proxylist
+from tallylib.locks import lock_yelpscraper
 
 
 ###########################################################################################
@@ -118,8 +119,16 @@ def yelpScraper(business_id,
         get the total_pages, then for the rest pages, utilize multi-threading.
         But I don't have time to do it. And sometimes it is not a bad idea to 
         keep the design simple.
-    '''      
+    '''    
+    # check whether other session(s) is web scraping the same business ID
+    if lock_yelpscraper.isLocked(business_id):
+        print(f"Some other session(s) is web scraping {business_id}.")
+        return None, []
+    else:
+        lock_yelpscraper.lockBusinessID(business_id)
+  
     results, keep_scraping = [], True
+
     for i in range(1000): # assume no business has not than 1000 pages of reivews
         if keep_scraping==False:
             break
@@ -128,6 +137,7 @@ def yelpScraper(business_id,
                            page=i, 
                            date_range=date_range)
         if status_code != 200:
+            lock_yelpscraper.unlockBusinessID(business_id)
             return status_code, []
 
         print(f"page {i}, reivews {len(result)} scraped, \
@@ -138,6 +148,7 @@ total pages {total_pages}, keep scraping {keep_scraping}")
         ## scrape page by page of a business slowly to avoid being blocked
         # time.sleep(random.uniform(2, 4))
 
+    lock_yelpscraper.unlockBusinessID(business_id)
     return status_code, results
 
 

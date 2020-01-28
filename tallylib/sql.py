@@ -228,7 +228,6 @@ def insertJobLogs(business_id,
     return 0 # returncode success
 
 
-
 ###############################################################
 # tallyds.job_config
 ###############################################################
@@ -321,22 +320,19 @@ def updateVizdata(business_id,
         return 1 # failure
 
 
-def checkVizdataTimestamp(business_id,
-                          viztype,
-                          days=14):
-    '''check whether vizdata has been generated within a period'''
-    timestamp = datetime.now() - timedelta(days=days)
+def getVizdataTimestamp(business_id,
+                        viztype):
     sql=f'''
-    SELECT count(*)
+    SELECT timestamp
     FROM tallyds.ds_vizdata
     WHERE business_id = '{business_id}'
     AND viztype = {viztype}
-    AND timestamp >= '{timestamp.strftime('%Y-%m-%d')}'; 
+    LIMIT 1; 
     '''
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql) 
-            return cursor.fetchall()[0][0]
+            return cursor.fetchall() # return a list of tuples
     except Exception as e:
         print(e)
         return 0
@@ -366,7 +362,8 @@ def getLatestVizdata(business_id,
 
 def deleteVizdata(business_id):
     sql = """
-    DELETE FROM tallyds.ds_vizdata WHERE business_id = {business_id};
+    DELETE FROM tallyds.ds_vizdata 
+    WHERE business_id = '{business_id}';
     """
     try:
         with connection.cursor() as cursor:

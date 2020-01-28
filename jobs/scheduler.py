@@ -47,10 +47,12 @@ def scheduleJobs():
                     task_yelpScraper,
                     'interval',
                     days=job_rate,
+                    jitter=43200, # 43,200 sec = 12 hours
                     id='task_yelpScraper',
                     max_instances=1,
                     replace_existing=True,
                     misfire_grace_time=100)
+                    
             elif job_id == "task_getVizdata" and job_rate > 0:
                 scheduler.add_job(
                     task_getVizdata,

@@ -12,7 +12,7 @@ from tallylib.sql import updateYelpReviews
 from tallylib.sql import insertJobLogs
 from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
-from tallylib.sql import checkVizdataTimestamp
+from tallylib.sql import getVizdataTimestamp
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
@@ -47,7 +47,7 @@ def task_yelpScraper(business_ids=None,
             returncode = updateYelpReviews(business_id, data)
             job_message = f"status code {status_code}, scraped total {len(data)} reviews, {m1}"
             insertJobLogs(business_id, job_type, returncode, job_message)
-            if len(data) > 0:
+            if data is not None and len(data) > 0:
                 insertYelpReviewLog(business_id, data[0][0]) # date
         else:
             job_message = f"status code {status_code}"
@@ -72,38 +72,55 @@ def task_getVizdata():
 
     for business_id in business_ids:
 
+        data = getLatestYelpReviewLog(business_id)
+        if len(data) > 0:
+            timestamp_yelpreview = data[0][0]
+        else:
+            return # no reviews to process
+
         # viztype 0 and 3 
         # 2020-01-22 viztype 0 and 3 are sharing an API for historical reasons.
         #     if have time, please change it
         viztype = 0
-        count = checkVizdataTimestamp(business_id, 0, 14)
-        if count == 0:
+        data = getVizdataTimestamp(business_id, 0)
+        if len(data) > 0:
+            timestamp_vizdata = data[0][0]
+        # If don't get .date(), it will raise 
+        # TypeError: can't compare offset-naive and offset-aware datetimes
+        if len(data) == 0 or timestamp_vizdata.date() < timestamp_yelpreview.date():
             vizdata = json.dumps(getDataViztype0(business_id),
                                  sort_keys=False)
-            updateVizdata(business_id, viztype, vizdata)
-            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
+            if vizdata is not None and len(vizdata) > 0:
+                updateVizdata(business_id, viztype, vizdata)
+                insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
 
         # viztype 1
         viztype = 1
-        count = checkVizdataTimestamp(business_id, 1, 14)
-        if count == 0:
+        data = getVizdataTimestamp(business_id, 1)
+        if len(data) > 0:
+            timestamp_vizdata = data[0][0]
+        if len(data) == 0 or timestamp_vizdata.date() < timestamp_yelpreview.date():
             vizdata = json.dumps(yelpTrendyPhrases(business_id), 
                                  sort_keys=False)
-            updateVizdata(business_id, viztype, vizdata)
-            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
+            if vizdata is not None and len(vizdata) > 0:
+                updateVizdata(business_id, viztype, vizdata)
+                insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
 
         # viztype 2
         viztype = 2
-        count = checkVizdataTimestamp(business_id, 2, 14)
-        if count == 0:
+        data = getVizdataTimestamp(business_id, 2)
+        if len(data) > 0:
+            timestamp_vizdata = data[0][0]
+        if len(data) == 0 or timestamp_vizdata.date() < timestamp_yelpreview.date():
             vizdata = json.dumps(yelpReviewCountMonthly(business_id), 
                                  sort_keys=False)
-            updateVizdata(business_id, viztype, vizdata)
-            insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
+            if vizdata is not None and len(vizdata) > 0:
+                updateVizdata(business_id, viztype, vizdata)
+                insertVizdataLog(business_id, viztype, triggeredby=0) # triggered by job
 
         # insert a log for the task
         job_message = "Updated viztype 0,1,2,3"
-        insertJobLogs(business_id, 1, 0, job_message)
+        insertJobLogs(business_id, 1, 0, job_message) # job type 1, success
     
 
 

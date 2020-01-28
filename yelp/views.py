@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 import requests
 import json
+import time
+from django.shortcuts import render
+from django.http import HttpResponse
 # Local imports
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
@@ -13,6 +14,7 @@ from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
 from tallylib.sql import isTallyBusiness
 from tallylib.sql import insertTallyBusiness
+from tallylib.locks import lock_yelpscraper
 from tasks.tasks import task_yelpScraper
 
 
@@ -30,11 +32,21 @@ def hello(request):
 def home(request, business_id):
     '''get data for views (APIs)'''
     returncode, result = 0, ""
-    try:
-        if not isTallyBusiness(business_id):
+    try: 
+        # check whether the business ID has never been scraped before
+        # check whether some other session(s) is scraping the same business ID
+        if not isTallyBusiness(business_id) and not lock_yelpscraper.isLocked(business_id):
             deleteVizdata(business_id)
             task_yelpScraper([business_id], job_type=1) # triggered by end user
             insertTallyBusiness(business_id)
+
+        for i in range(1200):
+            if lock_yelpscraper.isLocked(business_id):
+                time.sleep(1)
+                if i % 30 == 0:
+                    print("Waiting for some other session(s) finishing web scraping...")
+            else:
+                break
 
         viztype = request.GET.get('viztype')
         viztype = int(viztype)
