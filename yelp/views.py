@@ -38,7 +38,7 @@ def home(request, business_id):
         if not isTallyBusiness(business_id) and not lock_yelpscraper.isLocked(business_id):
             deleteVizdata(business_id)
             task_yelpScraper([business_id], job_type=1) # triggered by end user
-            insertTallyBusiness(business_id)
+            insertTallyBusiness([business_id])
 
         for i in range(1200):
             if lock_yelpscraper.isLocked(business_id):

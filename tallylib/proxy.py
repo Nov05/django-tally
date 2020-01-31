@@ -57,7 +57,7 @@ class ProxyList():
         return proxy
 
     def removeProxy(self): # Not in use for the data center IP list
-        self.list = self.list[1:]
+        self.list = self.list[:-1]
         
 
 # this object runs in a thread inside the application process

@@ -1,7 +1,10 @@
 # tallylib/yelpapis.py
 import json
 import requests
+import time
 from django.conf import settings
+# Local imports
+from tallylib.sql import insertYelpBusiness
 
 
 class YelpAPIKeys():
@@ -66,8 +69,9 @@ yelp_api_keys = YelpAPIKeys()
     }
 } 
 """
-def getBusinessesViaAPI(location="NYC",
-                        categories="cafe,coffee"):
+def getYelpBusinessesViaAPI(location="Phoenix",
+                            categories="cafe,coffee",
+                            mode=None):
     """
     Get business IDs in a location for certain categories   
     """
@@ -84,14 +88,25 @@ def getBusinessesViaAPI(location="NYC",
         if response.status_code == 200:
             biz_search = response.json()
             total = biz_search["total"]
+            latitude = biz_search["businesses"][0]["coordinates"]["latitude"]
+            longitude = biz_search["businesses"][0]["coordinates"]["longitude"]
+            message = f"Location: {location}, Categories: {categories}, Total: {total}, \
+Latitude: {latitude}, Longitude: {longitude}"
+            print(message)
             break
         else:
             time.sleep(1)
-    
+
+    if mode is not None and mode == 'testrun':
+        return message
+
     # get business IDs
     # returns 50 IDs per request * math.ceil(total/50) requests
+    # offset can't be greater than 1000... sadly
+    # limit+offset must be <= 1000... Grrr!
     offset = 0
-    for _ in range(3000): # set a cap of total requests
+    data = []
+    for _ in range(30): # set a cap of total requests
         url = api_base\
             + f"?location={location}" \
             + f"&categories={categories}" \
@@ -105,25 +120,31 @@ def getBusinessesViaAPI(location="NYC",
             if response.status_code == 200:
                 biz_search = response.json()
                 break
+            elif response.status_code == 400:
+                break
             else:
+                print(response.status_code)
                 time.sleep(1)
-
+     
         # break if nothing returns
-        if 'businesses' not in biz_search:
+        if response.status_code != 200 \
+            or 'businesses' not in biz_search \
+            or len(biz_search['businesses']) == 0:
             break
 
         # get business information
         businesses = biz_search['businesses']
+        print(f"total {len(businesses)} businesses returned")
+        
         for business in businesses:
-            print(business['id'])
-            print(business['alias'])
-            break
+            data.append([business['id'], 
+                         business['location']['city'], 
+                         location,
+                         categories])
+ 
+        offset += 50
+        time.sleep(1)
 
-        break # for testing
-
-
-
-
-
-
-    
+    if data is not None and len(data) > 0:
+        insertYelpBusiness(data)
+        return f"You have found {len(data)} businesses in location '{location}' with categories '{categories}'."

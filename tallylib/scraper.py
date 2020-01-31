@@ -32,9 +32,7 @@ def yelpScrapePage(business_id,
     url = base_url + business_id + api_url + str(page*20)
 
     with Session() as s:
-        for _ in range(200): # try many times until find a working proxy
-            # if status_code == 503: # possibly get blocked
-            #     proxylist.removeProxy() # remove the proxy IP from the list
+        for i in range(1000): # try many times until find a working proxy
             proxy = proxylist.getProxy() # get a new proxy IP
             try:
                 with s.get(url, timeout=5, proxies=proxy) as r:
@@ -42,10 +40,15 @@ def yelpScrapePage(business_id,
                     if status_code == 200:
                         response = r.json()
                         break
-                    print(f"status code {status_code}")
+                    elif status_code == 503: # Proxy IP got blocked
+                        # proxylist.removeProxy()
+                        print(f"{i} status code {status_code}")
+                    else:
+                        print(f"{i} status code {status_code}")
             except Exception as e:
-                print(e)
-                return None, [], 0, False
+                # proxylist.removeProxy()
+                print(i, e)
+                continue
 
         if status_code != 200:
             return status_code, [], 0, False
@@ -118,7 +121,7 @@ def yelpScraper(business_id,
     2020-01-22 If there is not a date range set, could scrape the first page,
         get the total_pages, then for the rest pages, utilize multi-threading.
         But I don't have time to do it. And sometimes it is not a bad idea to 
-        keep the design simple.
+        keep it simple...
     '''    
     # check whether other session(s) is web scraping the same business ID
     if lock_yelpscraper.isLocked(business_id):
@@ -129,7 +132,7 @@ def yelpScraper(business_id,
   
     results, keep_scraping = [], True
 
-    for i in range(1000): # assume no business has not than 1000 pages of reivews
+    for i in range(1000): # assume no business has more than 1000 pages of reivews
         if keep_scraping==False:
             break
         status_code, result, total_pages, keep_scraping = \

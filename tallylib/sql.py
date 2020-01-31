@@ -9,6 +9,7 @@ from django.db import connection
 2020-01-10 Pay attention to the indexes created on the tables.
 '''
 
+
 ###############################################################
 # tallyds.yelp_review
 ###############################################################
@@ -94,17 +95,22 @@ def getLatestReviews(business_id,
 
 def updateYelpReviews(business_id, data):
     # data columns: datetime, star, text, review_id, user_id
-    if len(data)==0:
+    if data is None or len(data)==0:
         return 0 # returncode success
 
     s0 = "INSERT INTO tallyds.yelp_review VALUES "
     s1 = ""
     for d in data:
+        d_datetime, d_date, d_time, d_now, d_text = "", "", "", "", ""
         d_datetime = d[0].strftime('%Y-%m-%d %H:%M:%S')
         d_date = d[0].strftime('%Y-%m-%d')
         d_time = d[0].strftime('%H:%M:%S')
         d_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        d_text = d[2].replace("'", "''")
+        try:
+            d_text = d[2].replace("'", "''")
+        except Exception as e:
+            print(d)
+            print(e)
         s1 = s1 + f"""\n    ('{d[3]}', \
 '{business_id}', \
 '{d[4]}', \
@@ -228,6 +234,24 @@ def insertJobLogs(business_id,
     return 0 # returncode success
 
 
+def getFailedJobLogs(job_type=0, # 0: triggered by task or job, 1: triggered by end users
+                     timestamp=datetime.now().strftime('%Y-%m-%d')):
+    sql = f"""
+    SELECT DISTINCT ON (business_id) business_id, job_status
+    FROM tallyds.job_log 
+    WHERE timestamp >= '{timestamp}'
+    ORDER BY business_id, timestamp DESC;
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            # return a list of business IDs
+            return [r[0] for r in cursor.fetchall() if r[1]==1]
+    except Exception as e:
+        print(str(e))
+        return []
+
+
 ###############################################################
 # tallyds.job_config
 ###############################################################
@@ -271,13 +295,17 @@ def isTallyBusiness(business_id):
         return False
 
 
-def insertTallyBusiness(business_id):
+def insertTallyBusiness(business_ids):
+    if business_ids is None or len(business_ids) == 0:
+        return 0
+
+    s1 = ""
+    for business_id in business_ids:
+        s1 = s1 + f"('{business_id}', CURRENT_TIMESTAMP),"
+
     sql = f"""
     INSERT INTO tallyds.tally_business VALUES
-    (
-        '{business_id}',
-        CURRENT_TIMESTAMP
-    )
+    {s1[:-1]}
     ON CONFLICT ON CONSTRAINT tally_business_pkey
     DO NOTHING;
     """
@@ -296,6 +324,9 @@ def insertTallyBusiness(business_id):
 def updateVizdata(business_id,
                   viztype,
                   vizdata):
+    if vizdata is None or len(vizdata) == 0:
+        return 0
+        
     sql=f'''\
     INSERT INTO tallyds.ds_vizdata VALUES
     (
@@ -310,7 +341,6 @@ def updateVizdata(business_id,
         vizdata = excluded.vizdata
     ;
     '''
-    sql
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql)
@@ -357,7 +387,7 @@ def getLatestVizdata(business_id,
             return cursor.fetchall()
     except Exception as e:
         print(e)   
-        return {}
+        return []
 
 
 def deleteVizdata(business_id):
@@ -400,26 +430,48 @@ def insertVizdataLog(business_id,
 
 
 ###############################################################
-# tallyds.task_business
+# tallyds.yelp_business
 ###############################################################
-def insertTaskBusiness(businesses): # list of business IDs
+def insertYelpBusiness(businesses):       
+    s1 = """
+    INSERT INTO tallyds.yelp_business 
+    (business_id, city, timestamp, location, categories) 
+    VALUES
+    """
+    s2 = ""
+    for b in businesses:
+        # business_id, city, timestamp, location, categories
+        s2 = s2 + f"('{b[0]}', '{b[1]}', CURRENT_TIMESTAMP, '{b[2]}', '{b[3]}'),"
+    s3 = """\
+    ON CONFLICT ON CONSTRAINT yelp_business_pkey
+    DO UPDATE SET
+        timestamp = excluded.timestamp,
+        location = excluded.location,
+        categories = excluded.categories;
+    """
+    sql = s1 + s2[:-1] + s3
     try:
-        s1 = ""
-        for business in businesses:
-            s1 = s1 + ""
-        sql = "INSERT INTO tallyds.task_business VALUES" + s1 + \
-            "ON CONFLICT ON CONSTRAINT task_business_pkey DO NOTHING;"
-        return 0 # success
-    except Exception as e:
-        print(e)
-        return 1 # failure
-
-    
-def deleteTaskBusiness():
-    try:
-        sql = "DELETE FROM tallyds.task_business;"
         with connection.cursor() as cursor:
             cursor.execute(sql) 
             return 0 # success
     except Exception as e:
         print(e)
+        return 1 # failure
+
+
+def getYelpBusinessIDs(location='Phoenix',
+                       categories='cafe,coffee'):
+    sql = f"""
+    SELECT business_id
+    FROM tallyds.yelp_business
+    WHERE location = '{location}'
+    AND categories = '{categories}';
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql) 
+            # return a list of business IDs
+            return [r[0] for r in cursor.fetchall()] 
+    except Exception as e:
+        print(e)
+        return []

@@ -18,10 +18,6 @@ class LockYelpScraper():
             pass
 
     def isLocked(self, business_id):
-        # print(datetime.now())
-        # print(self.list[business_id]['timestamp'])
-        # print((datetime.now() - self.list[business_id]['timestamp']).seconds)
-        # print(self.list[business_id]['timeout'])
         try: 
             if (datetime.now() - self.list[business_id]['timestamp']).seconds < self.list[business_id]['timeout']:
                 return True
@@ -31,4 +27,5 @@ class LockYelpScraper():
             return False
 
 
+# this object runs in a thread inside the application process
 lock_yelpscraper = LockYelpScraper()

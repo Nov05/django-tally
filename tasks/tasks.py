@@ -6,6 +6,7 @@ import json
 # Local imports
 from tallylib.scraper import yelpScraper
 from tallylib.sql import getTallyBusiness
+from tallylib.sql import insertTallyBusiness
 from tallylib.sql import getLatestYelpReviewLog
 from tallylib.sql import insertYelpReviewLog
 from tallylib.sql import updateYelpReviews
@@ -44,15 +45,17 @@ def task_yelpScraper(business_ids=None,
         status_code, data = None, []
         status_code, data = yelpScraper(business_id, date_range=date_range)
         if status_code==200:
-            returncode = updateYelpReviews(business_id, data)
-            job_message = f"status code {status_code}, scraped total {len(data)} reviews, {m1}"
-            insertJobLogs(business_id, job_type, returncode, job_message)
             if data is not None and len(data) > 0:
+                returncode = updateYelpReviews(business_id, data)
+                job_message = f"status code {status_code}, scraped total {len(data)} reviews, {m1}"
+                insertJobLogs(business_id, job_type, returncode, job_message)
                 insertYelpReviewLog(business_id, data[0][0]) # date
+                if returncode == 0:
+                    insertTallyBusiness([business_id])
         else:
             job_message = f"status code {status_code}"
             if status_code==503: # this is special case for web scraping...
-                job_message += " Wasn't able to assign an unblocked proxy IP"
+                job_message += " Was not able to assign an unblocked proxy IP"
             insertJobLogs(business_id, job_type, 1, job_message)
         print(job_message)
 
@@ -63,19 +66,22 @@ def task_yelpScraper(business_ids=None,
 # job_type = 1
 # 2020-01-22 for 73 cafes in Arizona, it took about 1079 seconds 
 #     to generate JSON data for 4 viztypes (viztype 0 to 3)
-def task_getVizdata():
+def task_getVizdata(business_ids=None):
     '''
     Generate visualization data by background jobs for better user experience
     '''
-    business_ids = []
-    business_ids = getTallyBusiness() # return a list of strings
+    if business_ids is None:
+        business_ids = []
+        business_ids = getTallyBusiness() # return a list of strings
 
     for business_id in business_ids:
+        print(f"Generating visualization data for business ID {business_id}...")
 
         data = getLatestYelpReviewLog(business_id)
         if len(data) > 0:
             timestamp_yelpreview = data[0][0]
         else:
+            print("Visualization data are recent. No need to re-generate.")
             return # no reviews to process
 
         # viztype 0 and 3 
@@ -120,7 +126,6 @@ def task_getVizdata():
 
         # insert a log for the task
         job_message = "Updated viztype 0,1,2,3"
+        print(job_message)
         insertJobLogs(business_id, 1, 0, job_message) # job type 1, success
-    
-
 
