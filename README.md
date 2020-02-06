@@ -257,7 +257,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import os
 >>> os.environ['RDS_DB_NAME']
 ```
-【Deployment】
+【Deployment】    
 To configure the instance deployed on AWS Elastic Beanstalk.   
 Go to the application `Configuration` page, choose `Software`.     
 <img src="https://github.com/Nov05/yelp-dataset-challenge/blob/master/images/2020-01-12%2004_32_30-django-tally%20-%20Configuration_.png?raw=true">    
@@ -266,8 +266,6 @@ Add system environment variables there.
  
 * [Grant permissions](https://github.com/Nov05/yelp-dataset-challenge/blob/master/tallysql/grant_permissions.sql) to the database users accordingly.   
 * For all the SQLs used in this project, refer to [these documents](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql).      
-
-
 
 
 ## Migration 
