@@ -131,9 +131,7 @@ You should get monthly rating counts like below.
 {"date": "2018-5-31", "reviews": 2}, {"date": "2018-6-30", "reviews": 1}, 
 {"date": "2018-7-31", "reviews": 3}, {"date": "2018-8-31", "reviews": 1}, 
 {"date": "2018-9-30", "reviews": 1}, {"date": "2018-11-30", "reviews": 1}]
-```
-http://127.0.0.1:8000/yelp/review/ (create review)      
-http://127.0.0.1:8000/yelp/review/9759c0c0-b28a-44ff-b770-4cf303367a60 (get, put, delete, by review UUID)           
+```         
 http://127.0.0.1:8000/bucketlists (create)    
 http://127.0.0.1:8000/bucketlists/1 (get, put, delete)   
 http://127.0.0.1:8000/jobs/example (APScheduler background job)     
