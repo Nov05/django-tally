@@ -473,8 +473,8 @@ $ python manage.py celery beat --loglevel=info
 * [Build a REST API with Django – A Test Driven Approach: Part 1](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1)  
 * [List of Useful URL Patterns](https://simpleisbetterthancomplex.com/references/2016/10/10/url-patterns.html)   
 * [Understanding file encoding in VSCode and PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7) 02/27/2019  
-【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)       
-【Repo】[yelp-dataset-challenge](https://github.com/nov05/yelp-dataset-challenge)     
+* 【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)       
+* 【Repo】[yelp-dataset-challenge](https://github.com/nov05/yelp-dataset-challenge)     
 
 
 ## Text to ASCII Art
