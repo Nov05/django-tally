@@ -13,7 +13,8 @@
 
 # django-tally  
 
-2019-01-06 This is a Django app for data science micro service, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
+2019-01-06 This is a Django app for data science micro service,    
+... ... ... locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
 2019-01-09 [【AWS EB deployment logs】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
 2019-01-12 [【All SQLs used in this project】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [【A D3.js line chart】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)    
 2020-02-05 You can visit the demo product at https://www.tally-ai.com/.    
