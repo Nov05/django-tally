@@ -4,7 +4,6 @@ import time
 import random
 import json
 # Local imports
-from tallylib.scraper import yelpScraper
 from tallylib.sql import getTallyBusiness
 from tallylib.sql import insertTallyBusiness
 from tallylib.sql import getLatestYelpReviewLog
@@ -14,6 +13,7 @@ from tallylib.sql import insertJobLogs
 from tallylib.sql import updateVizdata
 from tallylib.sql import insertVizdataLog
 from tallylib.sql import getVizdataTimestamp
+from tallylib.scraper import yelpScraper
 from tallylib.textrank import yelpTrendyPhrases
 from tallylib.scattertxt import getDataViztype0
 from tallylib.statistics import yelpReviewCountMonthly
@@ -129,3 +129,6 @@ def task_getVizdata(business_ids=None):
         print(job_message)
         insertJobLogs(business_id, 1, 0, job_message) # job type 1, success
 
+
+# jot type = 2 
+# 

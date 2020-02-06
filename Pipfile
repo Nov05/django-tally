@@ -17,6 +17,8 @@ pytextrank = "*"
 apscheduler = ">=3.6.3"
 django-apscheduler = "*"
 pandas = "*"
+gensim = "*"
+sklearn = "*"
 
 [requires]
 python_version = "3.6"

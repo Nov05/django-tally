@@ -147,6 +147,26 @@ DO NOTHING;
     return 0 # returncode 0 = success
 
 
+def getYelpReviews2(location='Phoenix',
+                    categories='cafe,coffee',
+                    limit=20000):
+    '''get Yelp reviews by location and categories'''
+    sql = f'''
+    SELECT r FROM tallyds.yelp_business AS b
+    JOIN tallyds.yelp_review AS r
+    ON b.business_id = r.business_id
+    WHERE location = '{location}'
+    AND categories = '{categories}'
+    LIIMT {limit};
+    '''
+    try: 
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            # return a list of texts
+            return [r[0] for r in cursor.fetchall()]
+    except Exception as e:
+        print(e)
+
 ###############################################################
 # tallyds.yelp_reivew_log
 ###############################################################

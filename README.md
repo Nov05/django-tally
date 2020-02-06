@@ -9,6 +9,12 @@
                      |___/                       Prototype
 ```
 
+# Blueprint 
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2016_30_17-Photos.png?raw=true" width=700>
+
+# Mobile UI
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" width=300>
+
 # django-tally  
 
 2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
@@ -34,7 +40,7 @@ $ pipenv shell
 Install dependencies:    
 (If you have download the repo, you can skip this step.)    
 ```
-$ pipenv install django psycopg2-binary djangorestframework pyyaml lxml "spacy>=2.0.0,<3.0.0" https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz pytextrank "apscheduler>=3.6.3" django-apscheduler
+$ pipenv install django psycopg2-binary djangorestframework pyyaml lxml "spacy>=2.0.0,<3.0.0" https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz pytextrank "apscheduler>=3.6.3" django-apscheduler gensim sklearn
 ```
 **Generate requirements.txt**  
 ```
