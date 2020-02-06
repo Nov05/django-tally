@@ -496,4 +496,4 @@ Font type: Big
 
 
 # Web and Mobile User Application UI   
-<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2019_14_02-Tally%20AI.png?raw=true" height=400><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" height=400>
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2019_14_02-Tally%20AI.png?raw=true" height=350><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" height=350>
