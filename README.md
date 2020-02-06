@@ -1,4 +1,6 @@
-﻿```
+﻿<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2016_30_17-Photos.png?raw=true" width=700>
+
+```
   _______      _  _                   _____ 
  |__   __|    | || |           /\    |_   _|
     | |  __ _ | || | _   _    /  \     | |  
@@ -9,10 +11,7 @@
                      |___/                       Prototype
 ```
 
-# Blueprint 
-<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2016_30_17-Photos.png?raw=true" width=700>
-
-# Mobile UI
+# Web and Mobile User Application UI
 <img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" width=300>
 
 # django-tally  
