@@ -1,4 +1,6 @@
-﻿```
+﻿<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2016_30_17-Photos.png?raw=true">
+
+```
   _______      _  _                   _____ 
  |__   __|    | || |           /\    |_   _|
     | |  __ _ | || | _   _    /  \     | |  
@@ -13,8 +15,8 @@
 
 2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
 2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
-2019-01-12 [All SQLs used in this project](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [a D3.js line chart](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)    
-
+2019-01-12 [All SQLs used in this project](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [a D3.js line chart](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)     
+2020-02-05 You can visit the app at https://www.tally-ai.com/.  
 
 
 ## Activate Virtual Enviroment   
@@ -491,13 +493,9 @@ Font type: Big
                                                        
 ```
 
-# Product Blueprint  
-<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2016_30_17-Photos.png?raw=true">
-
 
 # Web and Mobile User Application UI   
 <img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2019_14_02-Tally%20AI.png?raw=true" height=370><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" height=370>  
 
 <img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2001-02.png?raw=true" height=200><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2003-04.png?raw=true" height=200>   
-
 <img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2005.png?raw=true" height=200>
