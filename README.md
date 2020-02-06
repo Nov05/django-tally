@@ -13,11 +13,11 @@
 
 # django-tally  
 
-2019-01-06 This is a Django app, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
-2019-01-09 [AWS EB deployment logs](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
-2019-01-12 [All SQLs used in this project](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [a D3.js line chart](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)     
-2020-02-05 You can visit the app at https://www.tally-ai.com/.  
-
+2019-01-06 This is a Django app for data science micro service, locally running on Windows 10, deployed on AWS Elastic Beanstalk.     
+2019-01-09 [【AWS EB deployment logs】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/aws)    
+2019-01-12 [【All SQLs used in this project】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/tallysql), [【A D3.js line chart】](https://github.com/Nov05/yelp-dataset-challenge/tree/master/d3.js)    
+2020-02-05 You can visit the app at https://www.tally-ai.com/. 
+ 
 
 ## Activate Virtual Enviroment   
 
@@ -74,10 +74,11 @@ $ eb config
 $ eb terminate django-tally
 $ aws elasticbeanstalk restart-app-server --environment-name django-tally
 ```
-[Install the AWS CLI version 1 Using Python and pip on Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html#awscli-install-windows-pip)  
-[Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)      
-[Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)   
-[AWS eb config](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-config.html)    
+* [Install the AWS CLI version 1 Using Python and pip on Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html#awscli-install-windows-pip)  
+* [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)      
+* [Install Python, pip, and the EB CLI on Windows](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)   
+* [AWS eb config](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-config.html)    
+
 【Logs】
 ```
 (base) PS C:\Users\guido> aws2 --version
