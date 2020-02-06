@@ -32,7 +32,7 @@ $ pipenv install
 $ pipenv shell
 ```
 Install dependencies:    
-(If you have download the repo, you can skip this step.)    
+(If you have downloaded the repo, you can skip this step.)    
 ```
 $ pipenv install django psycopg2-binary djangorestframework pyyaml lxml "spacy>=2.0.0,<3.0.0" https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz pytextrank "apscheduler>=3.6.3" django-apscheduler gensim sklearn
 ```
@@ -496,6 +496,10 @@ Font type: Big
 
 
 # Web and Mobile User Application UI   
-<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2019_14_02-Tally%20AI.png?raw=true" height=350><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" height=350>   
-<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2001-02.png?raw=true" height=200><img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2003-04.png?raw=true" height=200>   
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/2020-02-05%2019_14_02-Tally%20AI.png?raw=true" height=370>
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/screenshot_20200205-140959.png?raw=true" height=370>  
+
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2001-02.png?raw=true" height=200>
+<img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2003-04.png?raw=true" height=200>   
+
 <img src="https://github.com/Nov05/pictures/blob/master/tally-labs19/tile%2005.png?raw=true" height=200>
