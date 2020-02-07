@@ -20,7 +20,7 @@
 2020-02-05 You can visit the demo product at https://www.tally-ai.com/.    
 ... ... ... Visit the project folders at https://github.com/Lambda-School-Labs?q=tally.     
 ... ... ... Visit the project documenation at https://drive.google.com/open?id=1MWFCPFGBZk_Jcn70ixPg7sh1URSwvuLN.    
-2020-02-06 Demo video https://youtu.be/8sh6ysSoh7w?t=6007
+2020-02-06 Demo video https://www.youtube.com/watch?v=IUzjatvmT0s  
  
 
 ## Activate Virtual Enviroment   
