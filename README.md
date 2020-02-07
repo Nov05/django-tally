@@ -476,7 +476,8 @@ $ python manage.py celery beat --loglevel=info
 * [List of Useful URL Patterns](https://simpleisbetterthancomplex.com/references/2016/10/10/url-patterns.html)   
 * [Understanding file encoding in VSCode and PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/components/vscode/understanding-file-encoding?view=powershell-7) 02/27/2019  
 * 【Repo】[flask-yelp-reviews](https://github.com/Nov05/flask-yelp-reviews)       
-* 【Repo】[yelp-dataset-challenge](https://github.com/nov05/yelp-dataset-challenge)     
+* 【Repo】[yelp-dataset-challenge](https://github.com/nov05/yelp-dataset-challenge)  
+* [Labs 19 Demo Week](https://www.notion.so/Labs-19-Demo-Week-Schedule-a115c8cee1124d40829d726bf208e314)      
 
 
 ## Text to ASCII Art
